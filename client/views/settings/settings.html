@@ -1,13 +1,13 @@
 <div>
   <wix-control name="UI.appSettings">
-  <wix-control
-    name="UI.checkbox"
-  props="{
-  label: 'Check me...',
+    <wix-control
+      name="UI.checkbox"
+      props="{
+  label: ('settings.checkbox.description'|translate),
   onChange: settingsCtrl.checkboxCtrl.onChange,
 
   'wix-param': 'myBodyFont'
   }">
-  </wix-control>
+    </wix-control>
   </wix-control>
 </div>

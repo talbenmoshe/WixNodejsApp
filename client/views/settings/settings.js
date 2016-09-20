@@ -1,5 +1,14 @@
 'use strict';
+function getLocale(defaultLocale){
+  var locale = Wix.Utils.getLocale() ||'en';
+  locale = locale.toLowerCase().replace(/[^a-zA-Z]+/g, "");
 
+  if(locale.length === 2) {
+    return locale;
+  }
+
+  return defaultLocale;
+}
 angular.module('myLoveCounter')
   .config(function ($routeProvider) {
     $routeProvider
