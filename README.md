@@ -1,1 +1,1 @@
-# WixNodeJSSkeletonApp
+# Wix NodeJS Skeleton Application
