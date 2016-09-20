@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="myLoveCounter">
+<head>
+
+  <base href="/">
+
+  <title>myLoveCounter!!</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+
+  <!-- build:css assets/index.css -->
+
+  <!-- bower:css -->
+  <!-- endinject -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="views/home/styles/home.css">
+  <link rel="stylesheet" href="views/home/styles/home2.css">
+  <!-- endinject -->
+  <!-- endbuild -->
+
+</head>
+<body>
+
+<strong>myLoveCounter-ejs</strong>
+
+<div ng-view></div>
+<script src="//sslstatic.wix.com/services/js-sdk/1.66.0/js/wix.min.js"></script>
+<!-- build:js scripts/angular_bundle.js -->
+
+<!-- bower:js -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-translate/angular-translate.js"></script>
+<script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+<script src="bower_components/angular-nl2br-filter/index.js"></script>
+<!-- endinject -->
+<!-- endbuild -->
+<!-- build:js scripts/index.js -->
+<!-- inject:js -->
+
+<script src="views/home/app.js"></script>
+
+<script src="views/home/home.js"></script>
+
+<script src="views/home/home.controller.js"></script>
+
+<script src="views/home/directives/directive1.js"></script>
+
+<!-- endinject -->
+
+<!-- endbuild -->
+
+<script src="http://localhost:35729/livereload.js?snipver=1"></script>
+
+</body>
+</html>
