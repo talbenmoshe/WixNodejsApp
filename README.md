@@ -1,4 +1,4 @@
-# Wix NodeJS Skeleton Application
+# Wix NodeJS Application
 
 
 ###**Overview**
