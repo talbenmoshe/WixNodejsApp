@@ -42,7 +42,7 @@ gulp.task('clean:dist', function (done) {
 gulp.task('clean:finish', function (done) {
   del([
     '.tmp/**',
-    '!dist/client/**/*.{css,js}'
+    '!dist/client/**/*.{css,jss}'
   ].concat(toDelete))
     .then(function () { done(); }).catch(done);
 });
@@ -50,8 +50,9 @@ gulp.task('clean:finish', function (done) {
 gulp.task('copy:dist', function () {
   var main = gulp.src(['server/**/*', 'package.json'], { base: './' });
   var assets = gulp.src('client/assets/**/*', { base: './' });
+  var translations = gulp.src('client/translations/**/*', { base: './' });
 
-  return sq({ objectMode: true }, main, assets)
+  return sq({ objectMode: true }, main, assets,translations)
     .pipe(gulp.dest('dist/'));
 });
 
@@ -114,6 +115,7 @@ gulp.task('rev', function () {
   var rev = new revAll({
     transformFilename: function (file, hash) {
       var filename = path.basename(file.path);
+      if (filename.indexOf('.json')>-1) return filename;
       if (revToExclude.indexOf(filename) !== -1) {
         return filename;
       }
