@@ -14,7 +14,7 @@ Generate the app:
 1. Clone our starter template
 `git clone https://github.com/zaherkassem/WixNodejsApp.git`
 2. Navigate to your project folder
-`cd WixNodeJSSkeletonApp/`
+`cd WixNodejsApp/`
 3. Install npm
 `npm install`
 4. Run the app
