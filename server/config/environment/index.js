@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 var all = {
 
-  env: process.env.NODE_ENV || 'development',
+  env: process.env.NODE_ENV || 'local',
   root: path.normalize(__dirname + '/../../..'),
   port: process.env.PORT || 9001
 };

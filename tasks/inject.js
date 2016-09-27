@@ -16,6 +16,7 @@ var toExclude  = require('./config/bowerFilesToExclude');
 function doInject (fileName,files,cssFileNames){
   console.log('do js inject for ',fileName);
   return gulp.src(fileName)
+    .pipe(gulp.dest('client'))
     .pipe(inject(gulp.src(bowerFiles(), { read: false }), {
       name: 'bower',
       relative: 'true',
@@ -30,27 +31,16 @@ function doInject (fileName,files,cssFileNames){
     .pipe(gulp.dest('client'));
 }
 
-function doCSSInject (fileName,files){
-  console.log('do css inject for ',fileName);
-  var target = gulp.src(fileName);
-  // It's not necessary to read the files (will speed up things), we're only after their paths:
-  var sources = gulp.src(files, {read: false });
 
-  return target.pipe(inject(sources,{relative:true,base:'views'}))
-    .pipe(gulp.dest('client'));
-
-}
 module.exports = function () {
-  //doCSSInject('client/index.ejs', 'client/views/home/styles/*.css');
-  //doCSSInject('client/settings.ejs', 'client/views/settings/styles/*.css');
-  doInject('client/index.ejs',toInject,'client/views/home/styles/*.css');
 
-  return doInject('client/settings.ejs',settingsToInject,'client/views/settings/styles/*.css');
+  doInject('src/index.ejs',toInject,'client/views/home/styles/*.css');
 
+  return doInject('src/settings.ejs',settingsToInject,'client/views/settings/styles/*.css');
 
 
-  //doInject('client/index.ejs',toInject);
-  //return  doInject('client/settings.ejs',settingsToInject);
+
+
 
 
 };

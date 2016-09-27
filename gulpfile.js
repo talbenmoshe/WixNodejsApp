@@ -2,8 +2,9 @@
 
 var gulp = require('gulp');
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV || 'local';
 
+gulp.task('copy',require('./tasks/copy'));
 gulp.task('default',    ['serve']);
 gulp.task('serve',      ['watch'],    require('./tasks/serve').nodemon);
 gulp.task('watch',      ['inject'],   require('./tasks/watch'));
@@ -17,3 +18,4 @@ gulp.task('control',                  require('./tasks/control'));
 gulp.task('e2e:update',               require('./tasks/test').e2eUpdate);
 gulp.task('e2e',        ['serve'],    require('./tasks/test').e2eTests);
 gulp.task('test',                     require('./tasks/test').test);
+gulp.task('publish',    /*['build'],*/    require('./tasks/publish'));

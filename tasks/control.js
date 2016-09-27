@@ -12,6 +12,8 @@ var jshint      = require('gulp-jshint');
 var jscs        = require('gulp-jscs');
 var jscsStylish = require('gulp-jscs-stylish');
 
+var srcFolder = 'src';//was 'client'
+
 module.exports = function (done) {
 
   function getConfig (file) {
@@ -37,7 +39,7 @@ module.exports = function (done) {
   }
 
   async.series([
-    control(['client/**/*.js', '!client/bower_components/**'], getConfig('./client/.jshintrc')),
+    control([srcFolder+'/**/*.js', '!client/bower_components/**'], getConfig('./'+srcFolder+'/.jshintrc')),
     control(['server/**/*.js'], getConfig('./server/.jshintrc')),
     control(['gulpfile.js', 'tasks/*.js'], getConfig('./server/.jshintrc'))
   ], done);

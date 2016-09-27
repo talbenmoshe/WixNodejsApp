@@ -48,7 +48,7 @@ gulp.task('clean:finish', function (done) {
 });
 
 gulp.task('copy:dist', function () {
-  var main = gulp.src(['server/**/*', 'package.json'], { base: './' });
+  var main = gulp.src(['server/**/*', 'package.json','app.yaml'], { base: './' });
   var assets = gulp.src('client/assets/**/*', { base: './' });
   var translations = gulp.src('client/translations/**/*', { base: './' });
 
@@ -73,7 +73,7 @@ gulp.task('useSettingsmin', ['inject'], function () {
 gulp.task('cssmin', function () {
   console.log("building css");
   return gulp.src('client/views/**/*.css', { base: './' })
-//  return gulp.src('dist/client/app.css')
+    .pipe(plumber())
     .pipe(autoprefixer())
     .pipe(minifyCss())
     .pipe(gulp.dest('dist/client/'));
@@ -81,12 +81,14 @@ gulp.task('cssmin', function () {
 
 gulp.task('scripts', function () {
   var views = gulp.src('client/views/**/*.html')
+    .pipe(plumber())
     .pipe(angularTemplatecache({
       root: 'views',
       module: 'myLoveCounter'
     }));
 
   var tpls = gulp.src('client/directives/**/*.html')
+    .pipe(plumber())
     .pipe(angularTemplatecache({
       root: 'directives',
       module: 'myLoveCounter'
@@ -97,6 +99,7 @@ gulp.task('scripts', function () {
 
 
   return sq({ objectMode: true }, app, views, tpls)
+    .pipe(plumber())
     .pipe(concat('app.js'))
     .pipe(ngAnnotate())
     .pipe(uglify())
@@ -106,6 +109,7 @@ gulp.task('scripts', function () {
 
 gulp.task('replace', function () {
   return gulp.src('dist/client/*.ejs')
+    .pipe(plumber())
     .pipe(replace(/\s*<script.*livereload.*><\/script>/, ''))
     .pipe(gulp.dest('dist/client'));
 });
@@ -126,6 +130,7 @@ gulp.task('rev', function () {
   });
 
   return gulp.src('dist/client/**')
+    .pipe(plumber())
     .pipe(rev.revision())
     .pipe(gulp.dest('dist/client/'));
 });

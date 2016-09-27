@@ -17,13 +17,13 @@ var bowerFiles = require('main-bower-files');
 var indexToInject   = require('./config/indexFilesToInject');
 var settingsToInject   = require('./config/settingsFilesToInject');
 var toExclude  = require('./config/bowerFilesToExclude');
-
+var srcFolder = 'src';//was 'client'
 module.exports = function () {
 
-  livereload.listen();
+  //livereload.listen();
 
   gulp.watch('bower.json', function () {
-    gulp.src('client/index.ejs')
+    gulp.src(srcFolder+'/index.ejs')
       .pipe(inject(gulp.src(bowerFiles(), { read: false }), {
         name: 'bower',
         relative: 'true',
@@ -34,49 +34,58 @@ module.exports = function () {
 
 
  watch([
-    'client/**/styles/*.scss',
-    'client/views/**/*.scss',
-    'client/directives/**/*.scss'
+   srcFolder+'/**/styles/*.scss',
+   srcFolder+'/views/**/*.scss',
+   srcFolder+'/directives/**/*.scss'
   ], function () {
 
-    gulp.src('client/**/styles/*.scss')
+    gulp.src(srcFolder+'/**/styles/*.scss')
       .pipe(plumber())
       .pipe(sass())
       .pipe(gulp.dest('client'))
-      .pipe(livereload());
+     // .pipe(livereload());
   });
 
   var coreFiles = [
-    'client/views/**/*.html',
-    'client/views/**/*.js',
-    'client/views/**/*.css',
-    '!client/views/**/*.scss',
-    '!client/views/**/*.spec.js',
-    '!client/views/**/*.e2e.js',
-    'client/views/*/directives/*.html',
-    'client/views/*/directives/*.js',
-    '!client/views/**/directives/*.spec.js',
-    'client/services/**/*.js',
-    '!client/services/**/*.spec.js',
-    'client/animations/*.js',
-    'client/filters/**/*.js',
-    '!client/filters/**/*.spec.js'
+    srcFolder+'/assets/**/*',
+    srcFolder+'/translations/**/*.json',
+    srcFolder+'/views/**/*.html',
+    srcFolder+'/views/**/*.js',
+    srcFolder+'/views/**/*.css',
+    '!'+srcFolder+'/views/**/*.scss',
+    '!'+srcFolder+'/views/**/*.spec.js',
+    '!'+srcFolder+'/views/**/*.e2e.js',
+    srcFolder+'/views/*/directives/*.html',
+    srcFolder+'/views/*/directives/*.js',
+    '!'+srcFolder+'/views/**/directives/*.spec.js',
+    srcFolder+'/services/**/*.js',
+    '!'+srcFolder+'/services/**/*.spec.js',
+    srcFolder+'/animations/*.js',
+    srcFolder+'/filters/**/*.js',
+    '!'+srcFolder+'/filters/**/*.spec.js'
   ];
+
+  gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client')).pipe(livereload());
 
   var lastInjection = Date.now();
 
   watch(coreFiles, { events: ['add', 'unlink'] }, function () {
+
     if (Date.now() - lastInjection < 100) { return; }
+
     lastInjection = Date.now();
-    gulp.src('client/index.ejs')
+
+    gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client'))
+      .pipe(gulp.src('client/index.ejs'))
       .pipe(inject(gulp.src(indexToInject), { relative: true }))
-      .pipe(gulp.dest('client'));
+      .pipe(gulp.dest('client'))
+      .pipe(
     gulp.src('client/settings.ejs')
       .pipe(inject(gulp.src(settingsToInject), { relative: true }))
-      .pipe(gulp.dest('client'));
+      .pipe(gulp.dest('client')));
   });
 
   watch(coreFiles, livereload.changed);
-  watch(['client/*.ejs'], livereload.changed);
+  watch([srcFolder+'/*.ejs'], livereload.changed);
 
 };

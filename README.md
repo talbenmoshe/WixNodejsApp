@@ -15,7 +15,9 @@ Generate the app:
 `git clone https://github.com/zaherkassem/WixNodejsApp.git`
 2. Navigate to your project folder
 `cd WixNodejsApp/`
-3. Install npm
+3. Install bower
+  `bower install`
+4. Install npm
 `npm install`
-4. Run the app
+5. Run the app
 `gulp serve`

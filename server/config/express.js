@@ -12,6 +12,7 @@ module.exports = function (app) {
 
   var env = config.env;
 
+  //console.log('config:',config);
   app.engine('.ejs',require('ejs').renderFile);
   app.set('view engine', 'ejs');
 

@@ -10,7 +10,7 @@ var server = require('http').createServer(app);
 require('./config/express')(app);
 var gcloud = require('google-cloud');
 var ds = gcloud.datastore({
-  projectId: process.env.GCLOUD_PROJECT||'adept-turbine-672'
+  projectId: process.env.GCLOUD_PROJECT||config.GCOLUD_PROJECT_ID
 });
 
 // Passing params to request
