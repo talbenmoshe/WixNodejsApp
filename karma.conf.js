@@ -31,19 +31,31 @@ module.exports = function (config) {
         }
         return true;
       }
-    }).concat([
+    })
+      // .concat([
+      //   'bower_components/angular-mocks/angular-mocks.js',
+      //   'home/app.js',
+      //   'views/**/*.js',
+      //   'views/**/*.html',
+      //   'services/**/*.js',
+      //   'directives/**/*.js',
+      //   'directives/**/*.html',
+      //   'filters/**/*.js'
+      // ]),
+      .concat([
       'bower_components/angular-mocks/angular-mocks.js',
-      'app.js',
-      'views/**/*.js',
-      'views/**/*.html',
-      'services/**/*.js',
-      'directives/**/*.js',
-      'directives/**/*.html',
-      'filters/**/*.js'
+
+      'views/home/**/*.js',
+      'views/home/**/*.html',
+      'views/home/services/*.js',
+      'views/home/directives/*.js',
+      'views/home/directives/*.html',
+      'views/home/filters/*.js'
     ]),
 
     exclude: [
-      'views/**/*.e2e.js'
+      'views/**/*.e2e.js',
+      'views/**/*.specs.js'
     ],
 
     reporters: ['progress'],
@@ -58,7 +70,7 @@ module.exports = function (config) {
     // config.LOG_WARN
     // config.LOG_INFO
     // config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
     autoWatch: false,
 

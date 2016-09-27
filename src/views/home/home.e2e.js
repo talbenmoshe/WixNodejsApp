@@ -1,8 +1,9 @@
 'use strict';
-
+console.log('home test');
 describe('home route', function () {
 
   beforeEach(function () {
+    console.log('hello route');
     browser.get('/');
   });
 
