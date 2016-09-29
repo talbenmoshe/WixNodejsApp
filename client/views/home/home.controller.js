@@ -15,6 +15,6 @@ angular.module('myLoveCounter')
       return that.$http.post('/api/things' + document.location.search);
 
     };
-    alert(1);
+    //alert(1);
     this.getData();
   });
