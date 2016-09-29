@@ -1,7 +1,8 @@
 'use strict';
 
 var proxyquire = require('proxyquire').noPreserveCache();
-
+var sinon = require('sinon');
+routerStub = sinon.stub();
 var thingCtrlStub = {
   index: 'thingCtrl.index'
 };

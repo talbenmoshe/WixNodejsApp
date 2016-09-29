@@ -1,5 +1,5 @@
 'use strict';
-console.log('home test');
+dump('home test');
 describe('home route', function () {
 
   beforeEach(function () {

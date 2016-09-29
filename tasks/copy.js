@@ -1,6 +1,7 @@
 var gulp       = require('gulp');
 var srcFolder = 'src';
 var coreFiles = [
+  srcFolder+'/assets/**/*',
   srcFolder+'/translations/**/*.json',
   srcFolder+'/views/**/*.html',
   srcFolder+'/views/**/*.js',
@@ -20,5 +21,5 @@ var coreFiles = [
 
 module.exports = function() {
 
-  gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client1/'));
+  gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client'));
 };

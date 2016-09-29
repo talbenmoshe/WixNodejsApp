@@ -5,14 +5,16 @@ angular.module('myLoveCounter')
 
     var vm = this;
     this.$http = $http;
+
+    var that = this;
+
     angular.extend(vm, {
       name: 'HomeCtrl'
     });
-    this.$http.post('/api/things'+document.location.search)
-      .then(function(response)  {
-      console.log('success',response);
-  },function(response)  {
-        console.log('fail',response);
-    })
-    ;
+    this.getData = function() {
+      return that.$http.post('/api/things' + document.location.search);
+
+    };
+    //alert(1);
+    this.getData();
   });

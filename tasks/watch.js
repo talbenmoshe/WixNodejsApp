@@ -20,7 +20,7 @@ var toExclude  = require('./config/bowerFilesToExclude');
 var srcFolder = 'src';//was 'client'
 module.exports = function () {
 
-  //livereload.listen();
+  livereload.listen();
 
   gulp.watch('bower.json', function () {
     gulp.src(srcFolder+'/index.ejs')
@@ -43,7 +43,7 @@ module.exports = function () {
       .pipe(plumber())
       .pipe(sass())
       .pipe(gulp.dest('client'))
-     // .pipe(livereload());
+      .pipe(livereload());
   });
 
   var coreFiles = [
@@ -69,7 +69,7 @@ module.exports = function () {
 
   var lastInjection = Date.now();
 
-  watch(coreFiles, { events: ['add', 'unlink'] }, function () {
+  watch(coreFiles,{ events: ['add', 'unlink'] }, function () {
 
     if (Date.now() - lastInjection < 100) { return; }
 
@@ -78,14 +78,19 @@ module.exports = function () {
     gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client'))
       .pipe(gulp.src('client/index.ejs'))
       .pipe(inject(gulp.src(indexToInject), { relative: true }))
-      .pipe(gulp.dest('client'))
-      .pipe(
+      .pipe(gulp.dest('client'));
     gulp.src('client/settings.ejs')
       .pipe(inject(gulp.src(settingsToInject), { relative: true }))
-      .pipe(gulp.dest('client')));
+      .pipe(gulp.dest('client'));
   });
 
-  watch(coreFiles, livereload.changed);
+  watch(coreFiles, {events:['change']},function(){
+    gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client'))
+      .pipe(livereload({start:false}))
+
+  });
+
+
   watch([srcFolder+'/*.ejs'], livereload.changed);
 
 };

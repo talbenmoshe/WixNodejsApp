@@ -5,7 +5,7 @@ var bowerFilesToExclude = require('./tasks/config/bowerFilesToExclude.js');
 module.exports = function (config) {
   config.set({
 
-    basePath: 'client',
+    basePath: 'src',
 
     frameworks: ['jasmine'],
 
@@ -14,7 +14,7 @@ module.exports = function (config) {
     },
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: 'client/',
+      stripPrefix: 'src/',
       moduleName: 'templates'
     },
 
@@ -70,7 +70,7 @@ module.exports = function (config) {
     // config.LOG_WARN
     // config.LOG_INFO
     // config.LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_INFO,
 
     autoWatch: false,
 
