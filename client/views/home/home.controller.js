@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myLoveCounter')
+angular.module('myApp')
   .controller('HomeCtrl', function ($http) {
 
     var vm = this;

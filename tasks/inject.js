@@ -8,13 +8,16 @@ var gulp       = require('gulp');
 var bowerFiles = require('main-bower-files');
 var fileSort   = require('gulp-angular-filesort');
 var inject     = require('gulp-inject');
+var sq                   = require('streamqueue');
 
 var toInject   = require('./config/indexFilesToInject');
 var settingsToInject = require('./config/settingsFilesToInject');
 var toExclude  = require('./config/bowerFilesToExclude');
 
 function doInject (fileName,files,cssFileNames){
-  console.log('do js inject for ',fileName);
+  //console.log('do js inject for ',fileName);
+
+
   return gulp.src(fileName)
     .pipe(gulp.dest('client'))
     .pipe(inject(gulp.src(bowerFiles(), { read: false }), {

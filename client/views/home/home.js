@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myLoveCounter')
+angular.module('myApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

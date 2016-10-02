@@ -84,14 +84,14 @@ gulp.task('scripts', function () {
     .pipe(plumber())
     .pipe(angularTemplatecache({
       root: 'views',
-      module: 'myLoveCounter'
+      module: 'myApp'
     }));
 
   var tpls = gulp.src('client/directives/**/*.html')
     .pipe(plumber())
     .pipe(angularTemplatecache({
       root: 'directives',
-      module: 'myLoveCounter'
+      module: 'myApp'
     }));
 
 

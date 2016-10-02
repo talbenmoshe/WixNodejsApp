@@ -1,3 +1,61 @@
 {
-  "settings.checkbox.description": "Check me!"
+  "settings.checkbox.description": "Check me!",
+
+  "app.description" : "Easily create frequently asked questions and answers",
+  "main.tab.title": "Main",
+  "main.tab.btn.manage.questions": "Manage Questions",
+
+
+  "layout.tab.title": "Layout",
+  "layout.tab.basic" : "Basic",
+  "layout.tab.collapse" : "Collapse",
+  "layout.tab.stripes" : "Stripes",
+  "settings.tab.title": "Settings",
+
+  "settings.tab.title": "Settings",
+  "settings.tab.title.search.bar": "Title & Search Bar",
+
+  "settings.tab.show.faq.title":"Show FAQ Title",
+  "settings.tab.what.does.faq.title.say":"What does FAQ title say ?",
+  "settings.tab.frequently.asked.questions":"Frequently asked questions",
+  "settings.tab.show.search.bar":"Show Search Bar",
+  "settings.tab.what.does.search.bar.title.say":"What does Search Bar title say ?",
+  "settings.tab.what.are.you.looking.for":"What are you looking for ?",
+  "settings.tab.share.buttons":"Share Buttons",
+  "settings.tab.social.title":"Show social Share Buttons On Answer",
+  "settings.tab.social.title.facebook":"Facebook",
+  "settings.tab.social.title.twitter":"Twitter",
+  "settings.tab.social.title.google.plus":"Google+",
+
+
+  "design.tab.title" : "Design",
+
+  "design.tab.text" : "Text",
+  "design.tab.question.text" : "Question Text",
+  "design.tab.answer.text" : "Answer Text",
+
+  "design.tab.header" : "Header",
+  "design.tab.title.text" : "Title Text",
+  "design.tab.category.text" : "Category Text",
+  "design.tab.search.text" : "Search Text",
+
+  "design.tab.background" : "Background",
+  "design.tab.category.stripe.color" : "Category Stripe Color",
+  "design.tab.widget.background" : "Widget Background",
+
+  "support.tab.title" : "Support",
+  "support.tab.developer.info" : "Developer info",
+  "support.tab.app.faq" : "App FAQ",
+  "support.tab.email.developer" : "support@wix.com",
+
+
+  "support.tab.review.the.app" : "Review the app",
+  "support.tab.review.the.app.description" : "Have you enjoyed the app? Spread the word and rate us in the app market",
+  "support.tab.btn.rate.us" : "Rate Us",
+  "support.tab.send.us.a.message":"Send us a message",
+  "support.tab.email.title"  : "What's your email? (optional)",
+  "support.tab.email.placeholder":"Email",
+  "support.tab.btn.send" : "Send",
+
+  "upgrade": "Upgrade"
 }

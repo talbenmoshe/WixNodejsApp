@@ -1,5 +1,5 @@
 {
-  "name": "myLoveCounter",
+  "name": "myApp",
   "version": "0.1.0",
   "dependencies": {
     "angular": "~1.5.0",

@@ -1,7 +1,7 @@
 'use strict';
 
 /*app declaration */
-angular.module('myLoveCounter', [
+angular.module('myApp', [
   'ngRoute',
   'ngAnimate',
   'WixControls',

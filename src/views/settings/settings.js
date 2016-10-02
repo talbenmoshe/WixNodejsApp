@@ -9,12 +9,15 @@ function getLocale(defaultLocale){
 
   return defaultLocale;
 }
-angular.module('myLoveCounter')
+angular.module('myApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/settings', {
+        /*
         templateUrl: 'views/settings/settings.html',
         controller: 'settingsCtrl',
         controllerAs: 'settingsCtrl'
+        */
+        template: '<settings></settings>'
       });
   });

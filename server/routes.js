@@ -3,21 +3,30 @@
 var config = require('./config/environment');
 var wix = require('wix');
 var path = require('path');
+
 wix.secret(config.APP_SECRET_KEY);
 
 module.exports = function (app) {
+
   app.use(function(req,res,next){
     //return next();
     console.log('in wix middleware',wix.secret());
     try {
-      var instance = wix.parse(req.query.instance);
-      if (instance !== null) {
-        next();
+      /*
+      if (!req.query || !req.query.instance ){
+        return next();
+      }
+      */
 
-      }
-      else {
-        res.send('unauthorized');
-      }
+        var instance = wix.parse(req.query.instance);
+        if (instance !== null) {
+          next();
+
+        }
+        else {
+          res.send('unauthorized');
+        }
+
     }catch(e){
       res.send('unauthorized');
     }

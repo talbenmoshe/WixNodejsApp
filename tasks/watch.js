@@ -13,11 +13,56 @@ var inject     = require('gulp-inject');
 var plumber    = require('gulp-plumber');
 var sass       = require('gulp-sass');
 var bowerFiles = require('main-bower-files');
-
+var babel = require('gulp-babel');
 var indexToInject   = require('./config/indexFilesToInject');
 var settingsToInject   = require('./config/settingsFilesToInject');
 var toExclude  = require('./config/bowerFilesToExclude');
 var srcFolder = 'src';//was 'client'
+var babel = require('gulp-babel');
+var srcFolder = 'src';//was 'client'
+
+var jsFiles = [
+
+  srcFolder+'/views/**/*.js',
+  '!'+srcFolder+'/views/**/*.spec.js',
+  '!'+srcFolder+'/views/**/*.e2e.js',
+  srcFolder+'/views/*/directives/*.js',
+  '!'+srcFolder+'/views/**/directives/*.spec.js',
+  srcFolder+'/services/**/*.js',
+  '!'+srcFolder+'/services/**/*.spec.js',
+  srcFolder+'/animations/*.js',
+  srcFolder+'/filters/**/*.js',
+  '!'+srcFolder+'/filters/**/*.spec.js'
+];
+var coreFiles = [
+  srcFolder+'/assets/**/*',
+  srcFolder+'/translations/**/*.json',
+  srcFolder+'/views/**/*.html',
+  srcFolder+'/views/**/*.js',
+  srcFolder+'/views/**/*.css',
+  '!'+srcFolder+'/views/**/*.scss',
+  '!'+srcFolder+'/views/**/*.spec.js',
+  '!'+srcFolder+'/views/**/*.e2e.js',
+  srcFolder+'/views/*/directives/*.html',
+  srcFolder+'/views/*/directives/*.js',
+  '!'+srcFolder+'/views/**/directives/*.spec.js',
+  srcFolder+'/services/**/*.js',
+  '!'+srcFolder+'/services/**/*.spec.js',
+  srcFolder+'/animations/*.js',
+  srcFolder+'/filters/**/*.js',
+  '!'+srcFolder+'/filters/**/*.spec.js'
+];
+
+ function babelize() {
+  return gulp.src('src/views/**/*.js')
+    .pipe(plumber())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest('client/views'));
+};
+
+
 module.exports = function () {
 
   livereload.listen();
@@ -46,36 +91,22 @@ module.exports = function () {
       .pipe(livereload());
   });
 
-  var coreFiles = [
-    srcFolder+'/assets/**/*',
-    srcFolder+'/translations/**/*.json',
-    srcFolder+'/views/**/*.html',
-    srcFolder+'/views/**/*.js',
-    srcFolder+'/views/**/*.css',
-    '!'+srcFolder+'/views/**/*.scss',
-    '!'+srcFolder+'/views/**/*.spec.js',
-    '!'+srcFolder+'/views/**/*.e2e.js',
-    srcFolder+'/views/*/directives/*.html',
-    srcFolder+'/views/*/directives/*.js',
-    '!'+srcFolder+'/views/**/directives/*.spec.js',
-    srcFolder+'/services/**/*.js',
-    '!'+srcFolder+'/services/**/*.spec.js',
-    srcFolder+'/animations/*.js',
-    srcFolder+'/filters/**/*.js',
-    '!'+srcFolder+'/filters/**/*.spec.js'
-  ];
 
-  gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client')).pipe(livereload());
+
+  gulp.src(coreFiles,{base:'./'+srcFolder})
+    .pipe(babelize())
+    .pipe(gulp.dest('client')).pipe(livereload());
 
   var lastInjection = Date.now();
+
 
   watch(coreFiles,{ events: ['add', 'unlink'] }, function () {
 
     if (Date.now() - lastInjection < 100) { return; }
 
     lastInjection = Date.now();
-
-    gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client'))
+    gulp.src(coreFiles,{base:'./'+srcFolder})
+      .pipe(babelize()).pipe(gulp.dest('client'))
       .pipe(gulp.src('client/index.ejs'))
       .pipe(inject(gulp.src(indexToInject), { relative: true }))
       .pipe(gulp.dest('client'));
@@ -85,8 +116,11 @@ module.exports = function () {
   });
 
   watch(coreFiles, {events:['change']},function(){
-    gulp.src(coreFiles,{base:'./'+srcFolder}).pipe(gulp.dest('client'))
-      .pipe(livereload({start:false}))
+    gulp.src(coreFiles,{base:'./'+srcFolder})
+      .babelize()
+      .pipe(gulp.dest('client'))
+      .pipe(livereload());
+
 
   });
 
