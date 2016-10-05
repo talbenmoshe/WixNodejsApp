@@ -1,7 +1,41 @@
-header.y {
-  font-size: 20px;
-  color: #000004; }
+.thing-form {
+  margin: 20px 0; }
 
-strong {
-  color: red;
-  float: right; }
+#banner {
+  border-bottom: none;
+  margin-top: -20px; }
+
+#banner h1 {
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -1px; }
+
+.hero-unit {
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: #4393B9; }
+
+.navbar-text {
+  margin-left: 15px; }
+
+.sprite {
+  width: 100px;
+  height: 100px;
+  display: block;
+  background: transparent url(https://abs.twimg.com/a/1471654539/img/animations/web_heart_animation.png) 0 0 no-repeat;
+  margin: 40px auto; }
+
+.sprite-anim {
+  animation: walker 1s steps(28);
+  -webkit-animation-fill-mode: forwards;
+  /* Chrome, Safari, Opera */
+  animation-fill-mode: forwards; }
+
+@keyframes walker {
+  from {
+    background-position: 0px 0; }
+  to {
+    background-position: -2800px 0; } }

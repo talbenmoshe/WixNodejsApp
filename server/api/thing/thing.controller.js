@@ -4,7 +4,7 @@
  */
 
 'use strict';
-var wix =require('wix');
+var wix =require('../../Wix');
 var defaultSettings = {show:false};
 
 module.exports = {
@@ -24,7 +24,8 @@ module.exports = {
     var ds = req.ds, count = 0, settings = {show: false};
     var metasiteId = getMetaSiteId(req);
     var key = ds.key(['love', metasiteId]);
-    readLoveFromDs(ds, metasiteId, function (err, data) {
+    var transaction = ds.transaction();
+    readLoveFromDs(ds, transaction, metasiteId, function (err, data) {
       console.log('got res count from datastore', err, data);
       if(typeof data !== 'undefined') {
         console.log('got count from datastore', err, data);
@@ -51,7 +52,8 @@ module.exports = {
     var key = ds.key(['love', metasiteId]);
 
     var isShow = settings.show;
-    readLoveFromDs(ds, metasiteId, function (err, data) {
+    var transaction = ds.transaction();
+    readLoveFromDs(ds, transaction, metasiteId, function (err, data) {
       //console.log('got res count from datastore', err, data);
 
       if(typeof data !== 'undefined') {
@@ -76,9 +78,9 @@ module.exports = {
     var ds = req.ds, count = 0, settings = {show: false};
     var metasiteId = getMetaSiteId(req);
     var key = ds.key(['love', metasiteId]);
-
+    var transaction = ds.transaction();
     var isShow = req.body.show;
-    readLoveFromDs(ds, metasiteId, function (err, data) {
+    readLoveFromDs(ds,transaction, metasiteId, function (err, data) {
       //console.log('got res count from datastore', err, data);
 
       if(typeof data !== 'undefined') {
@@ -110,8 +112,8 @@ module.exports = {
 }
 
 function getMetaSiteId (req){
-  return 'demo';
-  var instance = wix.parse(req.query.instance);
+
+  var instance = wix.checkInstance(req.query.instance);
   var compId = req.query.origCompId || req.query.compId;
   return (instance.instanceId+'_'+ compId) || 'demo';
 }

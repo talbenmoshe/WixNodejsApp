@@ -117,7 +117,7 @@ module.exports = function () {
 
   watch(coreFiles, {events:['change']},function(){
     gulp.src(coreFiles,{base:'./'+srcFolder})
-      .babelize()
+      .pipe(babelize())
       .pipe(gulp.dest('client'))
       .pipe(livereload());
 

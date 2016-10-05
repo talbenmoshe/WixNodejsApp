@@ -41,9 +41,4 @@ module.exports = function () {
 
   return doInject('src/settings.ejs',settingsToInject,'client/views/settings/styles/*.css');
 
-
-
-
-
-
 };

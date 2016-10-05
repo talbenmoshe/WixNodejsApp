@@ -1,24 +1,18 @@
 'use strict';
 
 var config = require('./config/environment');
-var wix = require('wix');
+var wix = require('./Wix');
 var path = require('path');
 
-wix.secret(config.APP_SECRET_KEY);
+
 
 module.exports = function (app) {
 
   app.use(function(req,res,next){
     //return next();
-    console.log('in wix middleware',wix.secret());
+    console.log('in wix middleware');
     try {
-      /*
-      if (!req.query || !req.query.instance ){
-        return next();
-      }
-      */
-
-        var instance = wix.parse(req.query.instance);
+        var instance = wix.checkInstance(req.query.instance);
         if (instance !== null) {
           next();
 

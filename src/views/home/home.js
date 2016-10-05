@@ -4,8 +4,11 @@ angular.module('myApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/home/home.html',
-        controller: 'HomeCtrl',
-        controllerAs: 'ctrl'
+        /*
+         templateUrl: 'views/settings/settings.html',
+         controller: 'settingsCtrl',
+         controllerAs: 'settingsCtrl'
+         */
+        template: '<main></main>'
       });
   });

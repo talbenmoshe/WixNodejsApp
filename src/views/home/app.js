@@ -8,14 +8,11 @@ angular.module('myApp', [
 
     $routeProvider
       .when('/settings', {
-        templateUrl: 'views/settings/settings.html',
-        controller: 'HomeCtrl',
-        controllerAs: 'vm'
+
+        template: '<settings></settings>'
       })
       .otherwise({
-      templateUrl: 'views/home/home.html',
-      controller: 'HomeCtrl',
-      controllerAs: 'ctrl'
+        template: '<main></main>'
       });
 
     $locationProvider.html5Mode(true);

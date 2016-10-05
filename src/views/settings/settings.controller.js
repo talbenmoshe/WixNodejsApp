@@ -4,147 +4,185 @@
 
 (function() {
 
-  class settingsCtrl {
+  class SettingsController {
 
     constructor($http,$scope,$window,$interval,$timeout,$q) {
-      this.$http            = $http;
-      this.$scope           = $scope;
-      this.$window          = $window;
-      this.$interval        = $interval;
-      this.$timeout         = $timeout;
-      this.$q               = $q;
 
-      this.instanceId       = Wix.Utils.getInstanceId();
-      this.loveStartId      = 'loveStart_'+this.instanceId;
-      this.settings         = {show: false};
-      this.loveStart        = 0;
-      this.defaultTabIndex  = 4;
-      this.counterControl   = null;
-      this.checkboxCtrl     = null;
-      this.name ='meir..';
+      this.$http = $http;
+      this.$q = $q;
+      this.$interval = $interval;
+      // this.awesomeThings = [];
+      this.$scope = $scope;
+      this.$window = $window;
+      this.$timeout = $timeout;
+      this.loveStart = 0;
+
+      this.instanceId =  Wix.Utils.getInstanceId();
+
+      this.loveStartId = 'loveStart_'+this.instanceId;
+      this.settings     = {show: false};
+      this.UIFuncs = null;
+
+      this.tabIndex = 0;
+
     }
 
+    safeApply(fn){
+      this.$timeout(fn);
+    }
 
-
-
-    getSettings(){
+    getNumber (){
       let defer = this.$q.defer();
       let promise = defer.promise;
       let that = this;
+      //console.log('in get number');
+      Wix.Data.Public.get(this.loveStartId, { scope: 'APP' }, function(result){
+        //console.log("success before",result,that.loveStart);
+        that.safeApply(function() {
+          that.loveStart = result[that.loveStartId];
+          that.$scope.refs.loveStart.setValue(that.loveStart);
+          console.log("success after getNumber", result, that.loveStart);
+          defer.resolve(true);
 
-      this.$http.get('/api/things/settings'+document.location.search)
-        .then(response => {
-        this.settings = response.data.settings;
-      that.updateWixCtrlValue ('tsShowCounter', this.settings.show);
-      //console.log('success get settings',this.settings);
-      defer.resolve(true);
-
-    },response =>{
-        console.log('fail get',response);
-        defer.resolve(false);
-      });
+        });
+      },((result)=>{console.log("fail",result); defer.resolve(false);}));
 
       return promise;
     }
 
-    setLoveCounter (num) {
+    getSettings(){
+      let defer = this.$q.defer();
+      let promise = defer.promise;
+
+      this.$http.get('/api/things/settings'+document.location.search)
+        .then(response => {
+          this.settings = response.data.settings;
+          console.log('refs',this.$scope.refs);
+          this.$scope.refs.showLove.state.checked = this.settings.show;
+          console.log('success get settings',this.settings);
+          defer.resolve(true);
+
+        },response =>{
+          console.log('fail get',response);
+          defer.resolve(false);
+        });
+
+      return promise;
+    }
+
+    setNumber(num){
       let that = this;
-      Wix.Data.Public.set(that.loveStartId, num, {scope: 'APP'},
-        function (result) { //onSuccess
-          that.updateComponent();
-          console.log('Success after setLoveCounter onSuccess:', result);
-        },
-        function (error) { //onFailure
-          console.log('Failure in setLoveCounter:', error);
-        }
-      );
+      //console.log('in set number');
+      Wix.Data.Public.set(this.loveStartId, num, { scope: 'APP' },function(result){
+        // console.log("success",result);
+        that.updateComponent();
+        // that.getNumber();
+      },function(result){
+        console.log("fail",result);
+      });
     }
 
     updateComponent(){
-      let that = this;
-      //console.log('in updateComponent',Wix.Utils.getOrigCompId());
 
+      let that = this;
+      console.log('in updateComponent',Wix.Utils.getOrigCompId());
       Wix.Settings.triggerSettingsUpdatedEvent({
         settings: that.settings,
         loveStart: that.loveStart
       },Wix.Utils.getOrigCompId());
     }
 
-    btnUpdateSettingsCtrl() {
+    LibMethods() {
       let that = this;
-      return {
-        onClick:  function() {
-          that.$scope.refs.panelTabs.setActiveTab(1);
-          //console.log('change tab', that.$scope);
-          //$('.tabs-menu .label-text:eq(1)').trigger('click');
-        }
-      };
-    }
 
-    startCounterCtrl () {
-      let that = this;
       return {
-        validate: function (val) {
-          return (val > 1 && val < 1000);
-        },
-        onClick: function (val) {
-          that.loveStart = val;
-          that.setLoveCounter(val);
-          ///console.log("Text input with button pressed startCounter: " + val);
-        }
-      };
-    }
-
-    showCounterCtrl()  {
-      let that = this;
-      return {
-        onChange: function (val) {
-          console.log('showCounterCtrl',val);
-
+        allowChange: function (val) {
+          console.log('allowChange:', val, that);
+          // var val = $(elem).getCtrl().getValue();
           that.safeApply(function () {
             that.settings.show = val;
             that.updateComponent();
           });
-
           that.$http.post('/api/things/settings' + document.location.search, {
             show: val
           })
             .then(response => {
-            console.log('success', response);
-        }, response => {
-            console.log('fail', response);
-          });
-        }
-      };
-    }
+              console.log('success', response);
+            }, response => {
+              console.log('fail', response);
+            })
+          ;
+        },
+        getShow: function(){
+          var defer= that.$q.defer();
+          var promise = defer.promise;
+          that.$timeout(function(){
+            defer.resolve(false)
+          },15000);
+          return promise;
+        },
+        inputChange : ((num)=>{
+          console.log("is %s number? %s",num,parseInt(num,10)==num*1);
+          var result = parseInt(num,10)==num*1 && num*1>=0;
+          if (result){
+            that.setNumber(num);
+          }
+          return result;
+        }),
 
-    handleCheckboxCtrl() {
-      let that = this;
-      return {
-        onChange: function () {
-          console.log('onChange called', arguments);
+        btnClick : function(){
+          that.$scope.refs.panelTabs.setActiveTab(1);
+
+          console.log(arguments);
         }
+
+
       }
     }
-
     $onInit() {
-
+      this.UIFuncs = this.LibMethods();
       let that = this;
-      this.counterControl = this.showCounterCtrl();
-        this.checkboxCtrl = this.handleCheckboxCtrl();
-      //that.getLoveCounterValue();
-      //that.getSettings();
-      //console.log('aa');
+      this.$window.inputChange = ((num)=>{
+        //console.log("is %s number? %s",num,parseInt(num,10)==num*1);
+        var result = parseInt(num,10)==num*1 && num*1>=0;
+        if (result){
+          this.setNumber(num);
+        }
+        return result;
+      });
+
+
+
+
+
+      that.$q.all([
+        that.getNumber(),
+        that.getSettings()
+      ])
+        .then(function(){
+          return;
+          //console.log('getting script');
+          var promise = $.getScript("app/settings/editor-ui-lib-jquery.js");
+          that.$q.when(promise).then(
+            function(){
+              //console.log('script loaded');
+            }
+          );
+
+        });
+
+
+
     }
-    //$onInit();
+
   }
 
 
-  settingsCtrl.$inject = ['$http','$scope','$window','$interval','$timeout','$q'];
+  SettingsController.$inject = ['$http','$scope','$window','$interval','$timeout','$q'];
 
   angular.module('myApp').component('settings', {
     templateUrl: 'views/settings/settings.html',
-    controller: settingsCtrl
+    controller: SettingsController
   });
 })();
 
