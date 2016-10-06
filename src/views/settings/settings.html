@@ -1,9 +1,9 @@
 <wix-control name="UI.appSettings">
   <wix-control name="UI.panelTabs" ref="panelTabs" props="{defaultTabIndex: 0}" style="height:100%;">
-    <div class="settings-tab" tab="Settings">
-      <wix-control name="UI.button" props="{label: 'Change Tab', className: 'main-cta-btn',onClick: $ctrl.UIFuncs.btnClick}"></wix-control>
+    <div class="settings-tab" tab="('settings.tab.title'|translate)">
+      <wix-control name="UI.button" props="{label: ('settings.tab.change'|translate), className: 'main-cta-btn',onClick: $ctrl.UIFuncs.btnClick}"></wix-control>
     </div>
-    <div class="main-tab" tab="Main">
+    <div class="main-tab" tab="('main.tab.title'|translate)">
       <wix-control name="UI.toggleSwitch" ref="showLove"  ng-bind1="$ctrl.settings.show" wix-param="showLove"
 
                    ng-attr-props="{

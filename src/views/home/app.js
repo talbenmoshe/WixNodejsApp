@@ -11,6 +11,9 @@ angular.module('myApp', [
 
         template: '<settings></settings>'
       })
+      .when('/mobile',{
+        template: '<mobile></mobile>'
+      })
       .otherwise({
         template: '<main></main>'
       });

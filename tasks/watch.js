@@ -59,7 +59,7 @@ var coreFiles = [
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(gulp.dest('client/views'));
+    .pipe(gulp.dest('client'));
 };
 
 

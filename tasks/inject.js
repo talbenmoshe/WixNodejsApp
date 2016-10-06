@@ -36,7 +36,8 @@ function doInject (fileName,files,cssFileNames){
 
 
 module.exports = function () {
-
+  gulp.src('src/*.ejs')
+    .pipe(gulp.dest('client'));
   doInject('src/index.ejs',toInject,'client/views/home/styles/*.css');
 
   return doInject('src/settings.ejs',settingsToInject,'client/views/settings/styles/*.css');
