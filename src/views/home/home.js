@@ -3,7 +3,7 @@
 angular.module('myApp')
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
+      .when('/index-desktop', {
         /*
          templateUrl: 'views/settings/settings.html',
          controller: 'settingsCtrl',

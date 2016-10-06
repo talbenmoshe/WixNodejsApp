@@ -11,7 +11,7 @@ angular.module('myApp', [
 
     $routeProvider
       .otherwise({
-        redirectTo: '/settings'
+        template: '<settings></settings>'
       });
 
     $locationProvider.html5Mode(true);

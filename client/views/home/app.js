@@ -1,23 +1,28 @@
 'use strict';
 
-angular.module('myApp', [
-  'ngRoute',
-  'ngAnimate'
-])
-  .config(function ($routeProvider, $locationProvider) {
+angular.module('myApp', ['ngRoute', 'ngAnimate']).config(function ($routeProvider, $locationProvider) {
 
-    $routeProvider
-      .when('/settings', {
+  $routeProvider.when('/settings', {
 
-        template: '<settings></settings>'
-      })
-      .when('/mobile',{
-        template: '<mobile></mobile>'
-      })
-      .otherwise({
-        template: '<main></main>'
-      });
+    template: '<settings></settings>'
+  }).when('/mobile', {
+    controller: function controller() {
+      console.log('in mobile view');
+    },
+    template: '<mobile></mobile>'
+  }).when('/index', {
+    template: function template() {
+      var mobileTemplate = '<mobile></mobile>';
+      var indexTemplate = '<main></main>';
+      var deviceType = Wix.Utils.getDeviceType();
+      console.log('device type', deviceType);
+      if (deviceType == 'mobile') {
+        return mobileTemplate;
+      }
 
-    $locationProvider.html5Mode(true);
+      return indexTemplate;
+    }
+  }).otherwise({ redirectTo: '/index' });
 
-  });
+  $locationProvider.html5Mode(true);
+});

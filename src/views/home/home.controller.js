@@ -2,7 +2,7 @@
 
 (function() {
 
-  class MainController {
+   class MainController {
 
     constructor($http,$timeout,$window) {
       this.$http      = $http;
@@ -83,4 +83,5 @@
       controller: MainController
     })
   ;
+
 })();

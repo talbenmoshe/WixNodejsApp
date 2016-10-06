@@ -12,11 +12,26 @@ angular.module('myApp', [
         template: '<settings></settings>'
       })
       .when('/mobile',{
+        controller: function(){
+          console.log('in mobile view');
+        },
         template: '<mobile></mobile>'
       })
-      .otherwise({
-        template: '<main></main>'
-      });
+      .when('/index',{
+        template: function(){
+          var mobileTemplate = '<mobile></mobile>';
+          var indexTemplate = '<main></main>';
+          var deviceType = Wix.Utils.getDeviceType();
+          console.log('device type',deviceType);
+          if (deviceType=='mobile'){
+            return mobileTemplate;
+          }
+
+          return indexTemplate;
+        }
+      })
+      .otherwise({redirectTo:'/index'});
+
 
     $locationProvider.html5Mode(true);
 

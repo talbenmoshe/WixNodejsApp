@@ -34,6 +34,13 @@ var jsFiles = [
   srcFolder+'/filters/**/*.js',
   '!'+srcFolder+'/filters/**/*.spec.js'
 ];
+var pureCopy = [
+  srcFolder+'/assets/**/*',
+  srcFolder+'/views/**/*.html',
+  srcFolder+'/translations/**/*.json',
+  srcFolder+'/views/*/directives/*.html'
+];
+
 var coreFiles = [
   srcFolder+'/assets/**/*',
   srcFolder+'/translations/**/*.json',
@@ -54,12 +61,12 @@ var coreFiles = [
 ];
 
  function babelize() {
-  return gulp.src('src/views/**/*.js')
+  return gulp.src(jsFiles)
     .pipe(plumber())
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(gulp.dest('client'));
+    .pipe(gulp.dest('client/views'));
 };
 
 
@@ -92,10 +99,10 @@ module.exports = function () {
   });
 
 
+  gulp.src(pureCopy,{base:'./'+srcFolder})
+    .pipe(gulp.dest('client'));
 
-  gulp.src(coreFiles,{base:'./'+srcFolder})
-    .pipe(babelize())
-    .pipe(gulp.dest('client')).pipe(livereload());
+  babelize().pipe(livereload());
 
   var lastInjection = Date.now();
 
@@ -116,9 +123,10 @@ module.exports = function () {
   });
 
   watch(coreFiles, {events:['change']},function(){
-    gulp.src(coreFiles,{base:'./'+srcFolder})
-      .pipe(babelize())
-      .pipe(gulp.dest('client'))
+    gulp.src(pureCopy,{base:'./'+srcFolder})
+      .pipe(gulp.dest('client'));
+
+    return babelize()
       .pipe(livereload());
 
 

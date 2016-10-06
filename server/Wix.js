@@ -13,6 +13,7 @@ var WixModel = (function() {
   var appSecretKey = config.APP_SECRET_KEY;
   var appId = config.APP_DEFINITION_ID;
   wix.secret(appSecretKey); // Sets the Wix secret key
+  //console.log('wix secret key is %s',appSecretKey);
   var parsedInstance = null;
   //var that = this;
   return {

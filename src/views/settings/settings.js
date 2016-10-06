@@ -13,11 +13,11 @@ angular.module('myApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/settings', {
-        /*
-        templateUrl: 'views/settings/settings.html',
-        controller: 'settingsCtrl',
-        controllerAs: 'settingsCtrl'
-        */
+
+        //templateUrl: 'views/settings/settings.html',
+        //controller: 'settingsCtrl',
+        //controllerAs: 'settingsCtrl'
+
         template: '<settings></settings>'
       });
   });

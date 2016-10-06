@@ -9,16 +9,20 @@ module.exports = function (app) {
 
   app.use(function(req,res,next){
     try {
-        var instance = wix.checkInstance(req.query.instance);
-        if (instance !== null) {
-          next();
-        }
-        else {
-          res.send('unauthorized');
-        }
+     // if (!req.instance) return next();
+
+      var instance = wix.checkInstance(req.query.instance);
+      if (instance !== null) {
+        next();
+      }
+      else {
+        console.log('url: %s\nquery:%s',req.url,req.query);
+        res.send('unauthorized!');
+      }
 
     }catch(e){
-      res.send('unauthorized');
+      console.log('url: %s\nquery:%s',req.url,req.query);
+      res.send('unauthorized!');
     }
 
   });
@@ -36,7 +40,8 @@ module.exports = function (app) {
     res.render('seo',{myquery:mysplit});
   });
   app.get('/index',function(req,res){
-    if (config.env !== 'production' && req.query.deviceType &&  req.query.deviceType == 'mobile' ){
+    console.log(config.env ,req.query.deviceType);
+    if ((config.env !== 'production') && (req.query.deviceType) &&  (req.query.deviceType == 'mobile') ){
       res.render('mobile');
     }
     else res.render('index');
@@ -45,15 +50,15 @@ module.exports = function (app) {
     res.render('settings');
   });
   app.get('/mobile',function(req,res){
-    res.render('settings');
+    res.render('mobile');
   });
 
-  app.route('/')
-    .get(function (req, res) {
-      if (config.env !== 'production' && req.query.deviceType &&  req.query.deviceType == 'mobile' ){
+  app.get('/',function (req, res) {
+    console.log(config.env ,req.query.deviceType);
+      if ((config.env !== 'production') && (req.query.deviceType) &&  (req.query.deviceType == 'mobile') ){
         res.render('mobile');
       }
-      else res.render('index.ejs');
+      else res.render('index');
 
     });
 
