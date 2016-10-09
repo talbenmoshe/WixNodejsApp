@@ -8,6 +8,7 @@ var gulp       = require('gulp');
 var bowerFiles = require('main-bower-files');
 var fileSort   = require('gulp-angular-filesort');
 var inject     = require('gulp-inject');
+var runSequence          = require('run-sequence');
 var sq                   = require('streamqueue');
 
 var toInject   = require('./config/indexFilesToInject');
@@ -34,12 +35,28 @@ function doInject (fileName,files,cssFileNames){
     .pipe(gulp.dest('client'));
 }
 
-
-module.exports = function () {
-  gulp.src('src/*.ejs')
+gulp.task('inject:ejs', function (done) {
+  return gulp.src('src/*.ejs')
     .pipe(gulp.dest('client'));
-  doInject('src/index.ejs',toInject,'client/views/home/styles/*.css');
+});
 
+gulp.task('inject:index', function (done) {
+  return  doInject('src/index.ejs',toInject,'client/views/home/styles/*.css');
+});
+
+gulp.task('inject:mobile', function (done) {
+  return  doInject('src/mobile.ejs',toInject,['client/views/home/styles/*.css','client/views/mobile/styles/*.css']);
+});
+
+gulp.task('inject:settings', function(done){
   return doInject('src/settings.ejs',settingsToInject,'client/views/settings/styles/*.css');
-
+});
+module.exports = function (done) {
+  return runSequence(
+    ['inject:ejs'],['inject:index','inject:mobile'],'inject:settings',
+    done);
 };
+
+
+
+

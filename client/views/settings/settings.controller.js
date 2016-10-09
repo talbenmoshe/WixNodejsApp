@@ -14,7 +14,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.$http = $http;
       this.$q = $q;
       this.$interval = $interval;
-      // this.awesomeThings = [];
+
       this.$scope = $scope;
       this.$window = $window;
       this.$timeout = $timeout;
@@ -40,9 +40,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var defer = this.$q.defer();
         var promise = defer.promise;
         var that = this;
-        //console.log('in get number');
+
         Wix.Data.Public.get(this.loveStartId, { scope: 'APP' }, function (result) {
-          //console.log("success before",result,that.loveStart);
+
           that.safeApply(function () {
             that.loveStart = result[that.loveStartId];
             that.$scope.refs.loveStart.setValue(that.loveStart);
@@ -80,11 +80,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'setNumber',
       value: function setNumber(num) {
         var that = this;
-        //console.log('in set number');
+        that.loveStart = num;
+
         Wix.Data.Public.set(this.loveStartId, num, { scope: 'APP' }, function (result) {
-          // console.log("success",result);
+
           that.updateComponent();
-          // that.getNumber();
         }, function (result) {
           console.log("fail", result);
         });
@@ -107,8 +107,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return {
           allowChange: function allowChange(val) {
-            console.log('allowChange:', val, that);
-            // var val = $(elem).getCtrl().getValue();
+
             that.safeApply(function () {
               that.settings.show = val;
               that.updateComponent();
@@ -116,9 +115,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             that.$http.post('/api/things/settings' + document.location.search, {
               show: val
             }).then(function (response) {
-              console.log('success', response);
+              //console.log('success', response);
             }, function (response) {
-              console.log('fail', response);
+              //console.log('fail', response);
             });
           },
           getShow: function getShow() {
@@ -130,7 +129,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return promise;
           },
           inputChange: function inputChange(num) {
-            console.log("is %s number? %s", num, parseInt(num, 10) == num * 1);
+            // console.log("is %s number? %s",num,parseInt(num,10)==num*1);
             var result = parseInt(num, 10) == num * 1 && num * 1 >= 0;
             if (result) {
               that.setNumber(num);
@@ -141,7 +140,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           btnClick: function btnClick() {
             that.$scope.refs.panelTabs.setActiveTab(1);
 
-            console.log(arguments);
+            //console.log(arguments);
           }
 
         };

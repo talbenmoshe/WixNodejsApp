@@ -47,6 +47,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'getNumber',
       value: function getNumber() {
+        var _this2 = this;
+
         var that = this;
         //console.log('in get number');
         var isClicked = this.$window.localStorage.getItem(this.loveStartId);
@@ -60,23 +62,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           });
         }, function (result) {
           console.log("fail", result);
+          Wix.Data.Public.set(_this2.loveStartId, 0, { scope: 'APP' });
         });
       }
     }, {
       key: '$onInit',
       value: function $onInit() {
-        var _this2 = this;
+        var _this3 = this;
 
         var that = this;
         this.$http.get('/api/things/read' + document.location.search).then(function (response) {
-          _this2.settings = response.data.settings;
-          _this2.loveCount = _this2.origLoveCount = response.data.loveCount;
-          _this2.getNumber();
+          _this3.settings = response.data.settings;
+          _this3.loveCount = _this3.origLoveCount = response.data.loveCount;
+          _this3.getNumber();
         });
 
         Wix.addEventListener(Wix.Events.SETTINGS_UPDATED, function (data) {
           that.safeApply(function () {
-            //console.log('Wix.Events.SETTINGS_UPDATED',data,that.loveStart,data.loveStart,that.loveCount);
+            console.log('Wix.Events.SETTINGS_UPDATED', data, that.loveStart, data.loveStart, that.loveCount);
             that.settings = data.settings;
             that.loveStart = data.loveStart * 1;
             that.loveCount = that.origLoveCount + that.loveStart;
@@ -87,9 +90,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return MainController;
   }();
+  /*
+    angular.module('myApp')
+      .component('main', {
+        templateUrl: 'views/home/home.html',
+        controller: MainController
+      })
+    ;
+  */
 
-  angular.module('myApp').component('main', {
-    templateUrl: 'views/home/home.html',
-    controller: MainController
-  });
+
+  angular.module('myApp').controller('MainController', MainController);
 })();

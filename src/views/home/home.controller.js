@@ -53,7 +53,10 @@
           that.loveCount += that.loveStart;
           // console.log("success after", result, that.loveStart);
         });
-      },((result)=>{console.log("fail",result)}));
+      },((result)=>{
+        console.log("fail",result);
+        Wix.Data.Public.set(this.loveStartId, 0, { scope: 'APP' }  );
+      }));
     }
 
     $onInit() {
@@ -67,7 +70,7 @@
 
       Wix.addEventListener(Wix.Events.SETTINGS_UPDATED,function(data){
         that.safeApply(function(){
-          //console.log('Wix.Events.SETTINGS_UPDATED',data,that.loveStart,data.loveStart,that.loveCount);
+          console.log('Wix.Events.SETTINGS_UPDATED',data,that.loveStart,data.loveStart,that.loveCount);
           that.settings = data.settings;
           that.loveStart = data.loveStart*1;
           that.loveCount = that.origLoveCount + that.loveStart;
@@ -76,12 +79,13 @@
       });
     }
   }
-
+/*
   angular.module('myApp')
     .component('main', {
       templateUrl: 'views/home/home.html',
       controller: MainController
     })
   ;
-
+*/
+  angular.module('myApp').controller('MainController',MainController);
 })();

@@ -27,7 +27,7 @@ var toDelete = [];
 module.exports = function (done) {
   runSequence(
     ['clean:dist', 'sass'],
-    ['usemin','useSettingsmin', 'copy:dist'],
+    ['usemin','useSettingsmin','useMobilemin'], 'copy:dist',
     ['replace', 'scripts', 'cssmin'],
     'rev',
     'clean:finish',
@@ -57,6 +57,7 @@ gulp.task('copy:dist', function () {
 });
 
 gulp.task('usemin', ['inject'], function () {
+  gulp.src('client/seo.ejs').pipe(gulp.dest('dist/client/'));
   return gulp.src('client/index.ejs')
     .pipe(plumber())
     .pipe(usemin({ css: [cssRebaseUrls({ root: 'client' }), 'concat'] }))
@@ -69,14 +70,19 @@ gulp.task('useSettingsmin', ['inject'], function () {
     .pipe(gulp.dest('dist/client/'));
 });
 
+gulp.task('useMobilemin', ['inject'], function () {
+  return gulp.src('client/mobile.ejs')
+    .pipe(plumber())
+    .pipe(usemin({ css: [cssRebaseUrls({ root: 'client' }), 'concat'] }))
+    .pipe(gulp.dest('dist/client/'));
+});
 
 gulp.task('cssmin', function () {
-  console.log("building css");
   return gulp.src('client/views/**/*.css', { base: './' })
     .pipe(plumber())
     .pipe(autoprefixer())
     .pipe(minifyCss())
-    .pipe(gulp.dest('dist/client/'));
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('scripts', function () {
@@ -115,14 +121,11 @@ gulp.task('replace', function () {
 });
 
 gulp.task('rev', function () {
-
   var rev = new revAll({
     transformFilename: function (file, hash) {
       var filename = path.basename(file.path);
-      if (filename.indexOf('.json')>-1) return filename;
-      if (revToExclude.indexOf(filename) !== -1) {
-        return filename;
-      }
+      if (revToExclude.find(function(elm){return filename.match(elm)})) return filename;
+
       toDelete.push(path.resolve(file.path));
       var ext = path.extname(file.path);
       return path.basename(file.path, ext) + '.' + hash.substr(0, 8) + ext;

@@ -8,27 +8,34 @@ angular.module('myApp', [
 
     $routeProvider
       .when('/settings', {
-
         template: '<settings></settings>'
       })
       .when('/mobile',{
-        controller: function(){
-          console.log('in mobile view');
-        },
-        template: '<mobile></mobile>'
+        controller: 'MobileController',
+        templateUrl: 'views/mobile/mobile.html'
       })
-      .when('/index',{
-        template: function(){
-          var mobileTemplate = '<mobile></mobile>';
-          var indexTemplate = '<main></main>';
+      .when('/index', {
+        templateUrl: function(){
+          var mainUrl = 'views/home/home.html';
+          var mobileUrl = 'views/mobile/mobile.html';
           var deviceType = Wix.Utils.getDeviceType();
-          console.log('device type',deviceType);
-          if (deviceType=='mobile'){
-            return mobileTemplate;
-          }
 
-          return indexTemplate;
+          if (deviceType == 'mobile') {
+            return mobileUrl;
+          }
+          return mainUrl;
+        },
+        controller: function(){
+          var mainController   = 'MainController';
+          var mobileController = 'MobileController';
+          var deviceType = Wix.Utils.getDeviceType();
+
+          if (deviceType == 'mobile') {
+            return mobileController;
+          }
+          return mainController;
         }
+
       })
       .otherwise({redirectTo:'/index'});
 
