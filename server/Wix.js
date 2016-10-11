@@ -23,7 +23,7 @@ var WixModel = (function() {
         return parsedInstance ;
       }
       catch (err) {
-        console.log('initWix err:',err);
+        console.log('checkInstance err:',err);
         return null;
       }
     },

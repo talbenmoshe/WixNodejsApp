@@ -4,6 +4,11 @@ var config = require('./config/environment');
 var wix = require('./Wix');
 var path = require('path');
 
+var gcloud = require('google-cloud');
+var ds = gcloud.datastore({
+  projectId: process.env.GCLOUD_PROJECT||config.GCLOUD_PROJECT_ID
+});
+
 
 module.exports = function (app) {
 
@@ -13,6 +18,7 @@ module.exports = function (app) {
 
       var instance = wix.checkInstance(req.query.instance);
       if (instance !== null) {
+        req.ds = ds;
         next();
       }
       else {
