@@ -4,36 +4,38 @@
  */
 
 'use strict';
-var wix =require('../../Wix');
+var wix = require('../../Wix');
 var defaultSettings = {show:false};
+var dsLIB = require('../ds');
+var ds = dsLIB.ds();
+
+function generateKey(req){
+  var metasiteId = getMetaSiteId(req);
+  return ds.setKey(['love', metasiteId]);
+}
 
 module.exports = {
 // Gets a list of Things
   index: function (req, res) {
-  //console.log('GOT ds ', req.ds);
-  var metasiteId = getMetaSiteId(req);
-  incrementLoveInDs(req.ds, metasiteId, function(err, count) {
-    //callbackRead
-    console.log('read completed', err, count);
-    res.json({loveCount: count, list: [{name: 'one thing', info: 'one thing info...'}]});
-  }, function (err, count) {
-    console.log('transaction completed', err, count);
-  });
-}
+
+    incrementLoveInDs(ds, req, function(err, count) {
+      //callbackRead
+      res.json({loveCount: count, list: [{name: 'one thing', info: 'one thing info...'}]});
+    }, function (err, count) {
+      console.log('transaction completed error', err, count);
+    });
+  }
+
 , read: function (req,res){
-    var ds = req.ds, count = 0, settings = {show: false};
-    var metasiteId = getMetaSiteId(req);
-    var key = ds.key(['love', metasiteId]);
+    var count = 0;
     var transaction = ds.transaction();
-    readLoveFromDs(ds, transaction, metasiteId, function (err, data) {
-      console.log('got res count from datastore', err, data);
+    readLoveFromDs(ds, transaction, req, function (err, data) {
       if(typeof data !== 'undefined') {
-        console.log('got count from datastore', err, data);
         res.json({loveCount: data.count,settings: data.settings,data: data,"first":false});
       }
       else{
         if (err.code === 404) {
-          updateLoveInDs (ds, metasiteId, 0, defaultSettings, function(err,data){
+          updateLoveInDs (ds, req, count, defaultSettings, function(err,data){
             if(typeof data !== null) {
               res.json({loveCount: data.count, settings: data.settings, data: data,"first":true});
             }
@@ -42,26 +44,20 @@ module.exports = {
         }
         else res.status(err.code).send({status:err});
       }
-
       //done();
     });
   }
   ,readSettings : function(req,res){
-    var ds = req.ds, count = 0, settings = {show: false};
-    var metasiteId = getMetaSiteId(req);
-    var key = ds.key(['love', metasiteId]);
-
-    var isShow = settings.show;
+    var  count = 0;
     var transaction = ds.transaction();
-    readLoveFromDs(ds, transaction, metasiteId, function (err, data) {
+    readLoveFromDs(ds, transaction, req, function (err, data) {
       //console.log('got res count from datastore', err, data);
-
       if(typeof data !== 'undefined') {
         res.json({settings: data.settings});
       }
       else{
         if (err.code === 404) {
-          updateLoveInDs (ds, metasiteId, 0,  {show:isShow}, function(err,data){
+          updateLoveInDs (ds, req, count,  defaultSettings, function(err,data){
             if(typeof data !== null) {
               res.json({settings: data.settings});
             }
@@ -75,28 +71,24 @@ module.exports = {
     });
   }
   ,writeSettings : function(req,res){
-    var ds = req.ds, count = 0, settings = {show: false};
-    var metasiteId = getMetaSiteId(req);
-    var key = ds.key(['love', metasiteId]);
+    var  count = 0;
+
     var transaction = ds.transaction();
     var isShow = req.body.show;
-    readLoveFromDs(ds,transaction, metasiteId, function (err, data) {
-      //console.log('got res count from datastore', err, data);
+    var settings = {show:isShow};
 
+    readLoveFromDs(ds,transaction, req, function (err, data) {
       if(typeof data !== 'undefined') {
-
-        //console.log('got settings from datastore', err, data);
-        updateLoveInDs(ds, metasiteId, data.count, {show: isShow}, function (err, data) {
+        updateLoveInDs(ds, req, data.count, settings, function (err, data) {
           if (typeof data !== null) {
             res.json({settings: data.settings});
           }
           else res.status(500).send({status: err});
         });
-
       }
-      else{
+      else {
         if (err.code === 404) {
-          updateLoveInDs (ds, metasiteId, 0,  {show:isShow}, function(err,data){
+          updateLoveInDs (ds, req, count,  settings, function(err,data){
             if(typeof data !== null) {
               res.json({settings: data.settings});
             }
@@ -105,14 +97,11 @@ module.exports = {
         }
         else res.status(err.code).send({status:err});
       }
-
-      //done();
     });
   }
 }
 
 function getMetaSiteId (req){
-
   var instance = wix.checkInstance(req.query.instance);
   var compId = req.query.origCompId || req.query.compId;
   return (instance.instanceId+'_'+ compId) || 'demo';
@@ -121,16 +110,18 @@ function getMetaSiteId (req){
 
 
 
-function incrementLoveInDs(ds, metasiteId, callbackRead, callback) {
+function incrementLoveInDs(ds, req, callbackRead, callback) {
  // console.log(ds);
   var error;
   var count = 0;
-  var settings = {show:false};
+  var promise = new Promise(function(resolve, reject){
+
+  });
   var transaction = ds.transaction();
 
   transaction.run(function(err) {
-    readLoveFromDs(ds,transaction, metasiteId, function (err, data) {
-      console.log('got res count from datastore', err, data);
+    readLoveFromDs(ds,transaction, req, function (err, data) {
+
       if(typeof data !== 'undefined') {
         console.log('got count from datastore', err, data);
         count = data.count + 1;
@@ -139,11 +130,11 @@ function incrementLoveInDs(ds, metasiteId, callbackRead, callback) {
       else {
         console.log(err);
         if (err.code == 404){
-          data = {setting:settings,count:0};
+          data = {setting:defaultSettings,count:0};
         }
       }
       callbackRead(err, count);
-      updateLoveInDs(ds, metasiteId, count, data.settings,function (err, data) {
+      updateLoveInDs(ds, req, count, data.settings,function (err, data) {
         console.log('got response from datastore', err, data);
         error = err;
         //done();
@@ -159,8 +150,8 @@ function incrementLoveInDs(ds, metasiteId, callbackRead, callback) {
   });
 }
 
-function updateLoveInDs (ds, metasiteId, count, settings, callback) {
-  var key = ds.key(['love', metasiteId]);
+function updateLoveInDs (ds, req, count, settings, callback) {
+  var key = generateKey(req);
 
   var entity = {
     key: key,
@@ -176,8 +167,8 @@ function updateLoveInDs (ds, metasiteId, count, settings, callback) {
     }
   );
 }
-function readLoveFromDs (ds, transaction,metasiteId, callback) {
-  var key = ds.key(['love', metasiteId]);
+function readLoveFromDs (ds, transaction,req, callback) {
+  var key = generateKey(req);
   transaction.get(key, function (err, entity) {
     if (err) {
       return callback(err);
