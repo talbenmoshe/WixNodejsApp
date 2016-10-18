@@ -79,7 +79,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         Wix.addEventListener(Wix.Events.SETTINGS_UPDATED, function (data) {
           that.safeApply(function () {
-            console.log('Wix.Events.SETTINGS_UPDATED', data, that.loveStart, data.loveStart, that.loveCount);
+            console.log('Wix.Events.SETTINGS_UPDATED', data); //,that.loveStart,data.loveStart,that.loveCount);
             that.settings = data.settings;
             that.loveStart = data.loveStart * 1;
             that.loveCount = that.origLoveCount + that.loveStart;

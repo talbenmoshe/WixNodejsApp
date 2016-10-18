@@ -8,7 +8,6 @@ var path = require('path');
 
 
 module.exports = function (app) {
-
   app.use(function(req,res,next){
     try {
      // if (!req.instance) return next();

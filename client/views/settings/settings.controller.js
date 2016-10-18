@@ -46,7 +46,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           that.safeApply(function () {
             that.loveStart = result[that.loveStartId];
             that.$scope.refs.loveStart.setValue(that.loveStart);
-            console.log("success after getNumber", result, that.loveStart);
+
             defer.resolve(true);
           });
         }, function (result) {
@@ -65,9 +65,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         this.$http.get('/api/things/settings' + document.location.search).then(function (response) {
           _this.settings = response.data.settings;
-          console.log('refs', _this.$scope.refs);
           _this.$scope.refs.showLove.state.checked = _this.settings.show;
-          console.log('success get settings', _this.settings);
           defer.resolve(true);
         }, function (response) {
           console.log('fail get', response);
@@ -80,6 +78,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'setNumber',
       value: function setNumber(num) {
         var that = this;
+        if (that.loveStart === num) return;
         that.loveStart = num;
 
         Wix.Data.Public.set(this.loveStartId, num, { scope: 'APP' }, function (result) {
@@ -94,7 +93,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function updateComponent() {
 
         var that = this;
-        console.log('in updateComponent', Wix.Utils.getOrigCompId());
+
         Wix.Settings.triggerSettingsUpdatedEvent({
           settings: that.settings,
           loveStart: that.loveStart
@@ -164,10 +163,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         that.$q.all([that.getNumber(), that.getSettings()]).then(function () {
           return;
           //console.log('getting script');
-          var promise = $.getScript("app/settings/editor-ui-lib-jquery.js");
-          that.$q.when(promise).then(function () {
-            //console.log('script loaded');
-          });
+
         });
       }
     }]);

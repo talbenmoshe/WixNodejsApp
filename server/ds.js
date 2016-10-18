@@ -6,7 +6,6 @@ var ds = gcloud.datastore({
 var key = null;
 
 module.exports = {
-
   ds: function(){
     return ds;
   },

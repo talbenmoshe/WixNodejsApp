@@ -6,100 +6,115 @@
 'use strict';
 var wix = require('../../Wix');
 var defaultSettings = {show:false};
-var dsLIB = require('../ds');
+var dsLIB = require('../../ds');
 var ds = dsLIB.ds();
 
 function generateKey(req){
   var metasiteId = getMetaSiteId(req);
-  return ds.setKey(['love', metasiteId]);
+  return dsLIB.setKey(['love', metasiteId]);
 }
+
+
 
 module.exports = {
 // Gets a list of Things
   index: function (req, res) {
-
-    incrementLoveInDs(ds, req, function(err, count) {
-      //callbackRead
-      res.json({loveCount: count, list: [{name: 'one thing', info: 'one thing info...'}]});
-    }, function (err, count) {
-      console.log('transaction completed error', err, count);
+    incrementLoveInDs(ds, req)
+      .then(function(count) {
+        //callbackRead
+       // console.log('index post success',count);
+        res.json({loveCount: count})
+      })
+    .catch(function (err) {
+      console.log('index post fail',err);
     });
   }
 
 , read: function (req,res){
     var count = 0;
-    var transaction = ds.transaction();
-    readLoveFromDs(ds, transaction, req, function (err, data) {
-      if(typeof data !== 'undefined') {
-        res.json({loveCount: data.count,settings: data.settings,data: data,"first":false});
-      }
-      else{
+    var transaction = dsLIB.transaction();
+    readLoveFromDs(ds, transaction, req)
+      .then(function (data) {
+      //  console.log('then data',data);
+          res.json({loveCount: data.count, settings: data.settings, data: data, "first": false});
+      })
+      .catch(function(err){
+      //  console.log('catch error',err)
         if (err.code === 404) {
-          updateLoveInDs (ds, req, count, defaultSettings, function(err,data){
-            if(typeof data !== null) {
-              res.json({loveCount: data.count, settings: data.settings, data: data,"first":true});
-            }
-            else res.status(500).send({status:err});
+          updateLoveInDs (ds, req, count, defaultSettings).then(function(data) {
+            res.json({loveCount: data.count, settings: data.settings, data: data, "first": true});
+          })
+            .catch(function(updateError){res.status(500).send({status:updateError});
           });
         }
         else res.status(err.code).send({status:err});
       }
       //done();
-    });
+    );
   }
   ,readSettings : function(req,res){
     var  count = 0;
-    var transaction = ds.transaction();
-    readLoveFromDs(ds, transaction, req, function (err, data) {
-      //console.log('got res count from datastore', err, data);
-      if(typeof data !== 'undefined') {
-        res.json({settings: data.settings});
-      }
-      else{
+    var transaction = dsLIB.transaction();
+    readLoveFromDs(ds, transaction, req)
+      .then(function(data) {
+      //  console.log('got res count from datastore', data);
+          res.json({settings: data.settings});
+      })
+      .catch(function(err){
+        //  console.log('error got res count from datastore', error);
         if (err.code === 404) {
-          updateLoveInDs (ds, req, count,  defaultSettings, function(err,data){
-            if(typeof data !== null) {
-              res.json({settings: data.settings});
-            }
-            else res.status(500).send({status:err});
+          updateLoveInDs (ds, req, count,  defaultSettings)
+            .then(function(data) {
+              //if (typeof data !== null) {
+                res.json({settings: data.settings});
+              //}
+            })
+            .catch(function(err){
+              res.status(500).send({status:err});
           });
         }
         else res.status(err.code).send({status:err});
       }
 
       //done();
-    });
+    );
   }
   ,writeSettings : function(req,res){
     var  count = 0;
 
-    var transaction = ds.transaction();
+    var transaction = dsLIB.transaction();
     var isShow = req.body.show;
     var settings = {show:isShow};
 
-    readLoveFromDs(ds,transaction, req, function (err, data) {
-      if(typeof data !== 'undefined') {
-        updateLoveInDs(ds, req, data.count, settings, function (err, data) {
-          if (typeof data !== null) {
-            res.json({settings: data.settings});
-          }
-          else res.status(500).send({status: err});
-        });
-      }
-      else {
-        if (err.code === 404) {
-          updateLoveInDs (ds, req, count,  settings, function(err,data){
-            if(typeof data !== null) {
-              res.json({settings: data.settings});
-            }
-            else res.status(500).send({status:err});
+    readLoveFromDs(ds,transaction, req)
+      .then(function (data) {
+          updateLoveInDs(ds, req, data.count, settings)
+            .then(function (data) {
+             // if (typeof data !== null) {
+                res.json({settings: data.settings});
+             // }
+            })
+            .catch(function(err){
+              res.status(err.code).send({status: err})
           });
+      })
+      .catch(function(err) {
+        if (err.code === 404) {
+          updateLoveInDs(ds, req, count, settings)
+            .then(function (data) {
+              // if(typeof data !== null) {
+              res.json({settings: data.settings});
+              // }
+            })
+            .catch(function (err) {
+              res.status(500).send({status: err});
+            });
         }
         else res.status(err.code).send({status:err});
       }
-    });
+    );
   }
-}
+};
 
 function getMetaSiteId (req){
   var instance = wix.checkInstance(req.query.instance);
@@ -107,50 +122,49 @@ function getMetaSiteId (req){
   return (instance.instanceId+'_'+ compId) || 'demo';
 }
 
-
-
-
-function incrementLoveInDs(ds, req, callbackRead, callback) {
- // console.log(ds);
+function incrementLoveInDs(ds, req){
   var error;
   var count = 0;
-  var promise = new Promise(function(resolve, reject){
-
-  });
-  var transaction = ds.transaction();
-
-  transaction.run(function(err) {
-    readLoveFromDs(ds,transaction, req, function (err, data) {
-
-      if(typeof data !== 'undefined') {
-        console.log('got count from datastore', err, data);
-        count = data.count + 1;
-        settings = data.settings;
+  var dbData;
+  var settings;
+  return new Promise(function(resolve, reject){
+    var transaction = dsLIB.transaction();
+    transaction.run(function(transactionError) {
+      if (transactionError){
+        reject(transactionError);
+        return;
       }
-      else {
-        console.log(err);
-        if (err.code == 404){
-          data = {setting:defaultSettings,count:0};
-        }
-      }
-      callbackRead(err, count);
-      updateLoveInDs(ds, req, count, data.settings,function (err, data) {
-        console.log('got response from datastore', err, data);
-        error = err;
-        //done();
-      })
+
+      readLoveFromDs(ds,transaction, req)
+        .then(function(data){
+          if (typeof data !== 'undefined') {
+            console.log('got count from datastore', data);
+            count = data.count + 1;
+            settings = data.settings;
+            resolve(count);
+          }
+        })
+        .catch(function(readError){
+          if (readError.code == 404){
+           settings=defaultSettings;
+          }
+          else reject(readError);
+        })
+        .then(function(){
+            updateLoveInDs(ds, req, count, settings)
+              .then(function(count){
+                resolve(count);
+              })
+              .catch(function(updateError){
+                reject(updateError);
+              });
+      });
     });
-  }, function(transactionError) {
-    if (transactionError || error) {
-      callback(transactionError || error);
-    } else {
-      // The transaction completed successfully.
-      callback(null, count);
-    }
   });
 }
 
-function updateLoveInDs (ds, req, count, settings, callback) {
+
+function updateLoveInDs (ds, req, count, settings) {
   var key = generateKey(req);
 
   var entity = {
@@ -159,26 +173,31 @@ function updateLoveInDs (ds, req, count, settings, callback) {
             'settings':settings
           }
   };
-
-  ds.save(
-    entity,
-    function (err) {
-      callback(err, err ? null : entity.data);
-    }
-  );
+  return new Promise(function(resolve, reject) {
+    ds.save(
+      entity,
+      function (err) {
+        if (!err) resolve(entity.data);
+        else reject(err);
+      }
+    );
+  });
 }
-function readLoveFromDs (ds, transaction,req, callback) {
-  var key = generateKey(req);
-  transaction.get(key, function (err, entity) {
-    if (err) {
-      return callback(err);
-    }
-    if (!entity) {
-      return callback({
-        code: 404,
-        message: 'Not found'
-      });
-    }
-    callback(null, entity.data);
+function readLoveFromDs (ds, transaction,req) {
+  return new Promise(function(resolve, reject) {
+    var key = generateKey(req);
+    transaction.get(key, function (err, entity) {
+      if (err) {
+        //return callback(err);
+        reject(err);
+      }
+      if (!entity) {
+        reject ({
+          code: 404,
+          message: 'Not found'
+        });
+      }
+      else resolve(entity.data);
+    });
   });
 }

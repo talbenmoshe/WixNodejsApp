@@ -41,7 +41,7 @@
         that.safeApply(function() {
           that.loveStart = result[that.loveStartId];
           that.$scope.refs.loveStart.setValue(that.loveStart);
-          console.log("success after getNumber", result, that.loveStart);
+
           defer.resolve(true);
 
         });
@@ -57,11 +57,8 @@
       this.$http.get('/api/things/settings'+document.location.search)
         .then(response => {
           this.settings = response.data.settings;
-          console.log('refs',this.$scope.refs);
           this.$scope.refs.showLove.state.checked = this.settings.show;
-          console.log('success get settings',this.settings);
           defer.resolve(true);
-
         },response =>{
           console.log('fail get',response);
           defer.resolve(false);
@@ -72,6 +69,7 @@
 
     setNumber(num){
       let that = this;
+      if (that.loveStart === num) return;
       that.loveStart = num;
 
       Wix.Data.Public.set(this.loveStartId, num, { scope: 'APP' },function(result){
@@ -87,7 +85,8 @@
     updateComponent(){
 
       let that = this;
-      console.log('in updateComponent',Wix.Utils.getOrigCompId());
+
+
       Wix.Settings.triggerSettingsUpdatedEvent({
         settings: that.settings,
         loveStart: that.loveStart
@@ -163,12 +162,7 @@
         .then(function(){
           return;
           //console.log('getting script');
-          var promise = $.getScript("app/settings/editor-ui-lib-jquery.js");
-          that.$q.when(promise).then(
-            function(){
-              //console.log('script loaded');
-            }
-          );
+
 
         });
 
