@@ -1,0 +1,12 @@
+
+<div class="container" ng-controller="MainController as $parentCtrl">
+  <div class="row" ng-controller="MobileController as $ctrl">
+    <div class="col-lg-6">
+      <div>Mobile view</div>
+      <div class="sprite" ng-class="{'sprite-anim':$parentCtrl.clicked}" ng-click="$parentCtrl.addCount()">
+        <span class="center" ng-bind="$parentCtrl.loveCount" ng-if="$parentCtrl.settings.show"></span>
+      </div>
+
+    </div>
+  </div>
+</div>

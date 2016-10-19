@@ -5,13 +5,14 @@
 
 'use strict';
 var wix = require('../../Wix');
-var defaultSettings = {show:false};
 var dsLIB = require('../../ds');
+
+var defaultSettings = {show:false};
 var ds = dsLIB.ds();
 
 function generateKey(req){
-  var metasiteId = wix.getMetaSiteId(req);
-  return dsLIB.setKey(['love', metasiteId]);
+  var metaSiteId = wix.getMetaSiteId(req);
+  return dsLIB.setKey(['Data', metaSiteId]);
 }
 
 
@@ -19,11 +20,11 @@ function generateKey(req){
 module.exports = {
 // Gets a list of Things
   index: function (req, res) {
-    incrementLoveInDs(ds, req)
+    incrementDataInDs(ds, req)
       .then(function(count) {
         //callbackRead
        // console.log('index post success',count);
-        res.json({loveCount: count})
+        res.json({DataCount: count})
       })
     .catch(function (err) {
       console.log('index post fail',err);
@@ -33,16 +34,16 @@ module.exports = {
 , read: function (req,res){
     var count = 0;
     var transaction = dsLIB.transaction();
-    readLoveFromDs(ds, transaction, req)
+    readDataFromDs(transaction, req)
       .then(function (data) {
       //  console.log('then data',data);
-          res.json({loveCount: data.count, settings: data.settings, data: data, "first": false});
+          res.json({DataCount: data.count, settings: data.settings, data: data, "first": false});
       })
       .catch(function(err){
       //  console.log('catch error',err)
         if (err.code === 404) {
-          updateLoveInDs (ds, req, count, defaultSettings).then(function(data) {
-            res.json({loveCount: data.count, settings: data.settings, data: data, "first": true});
+          updateDataInDs (ds, req, count, defaultSettings).then(function(data) {
+            res.json({DataCount: data.count, settings: data.settings, data: data, "first": true});
           })
             .catch(function(updateError){res.status(500).send({status:updateError});
           });
@@ -55,7 +56,7 @@ module.exports = {
   ,readSettings : function(req,res){
     var  count = 0;
     var transaction = dsLIB.transaction();
-    readLoveFromDs(ds, transaction, req)
+    readDataFromDs(transaction, req)
       .then(function(data) {
       //  console.log('got res count from datastore', data);
           res.json({settings: data.settings});
@@ -63,7 +64,7 @@ module.exports = {
       .catch(function(err){
         //  console.log('error got res count from datastore', error);
         if (err.code === 404) {
-          updateLoveInDs (ds, req, count,  defaultSettings)
+          updateDataInDs (ds, req, count,  defaultSettings)
             .then(function(data) {
               //if (typeof data !== null) {
                 res.json({settings: data.settings});
@@ -86,9 +87,9 @@ module.exports = {
     var isShow = req.body.show;
     var settings = {show:isShow};
 
-    readLoveFromDs(ds,transaction, req)
+    readDataFromDs(transaction, req)
       .then(function (data) {
-          updateLoveInDs(ds, req, data.count, settings)
+          updateDataInDs(ds, req, data.count, settings)
             .then(function (data) {
              // if (typeof data !== null) {
                 res.json({settings: data.settings});
@@ -100,7 +101,7 @@ module.exports = {
       })
       .catch(function(err) {
         if (err.code === 404) {
-          updateLoveInDs(ds, req, count, settings)
+          updateDataInDs(ds, req, count, settings)
             .then(function (data) {
               // if(typeof data !== null) {
               res.json({settings: data.settings});
@@ -118,10 +119,8 @@ module.exports = {
 
 
 
-function incrementLoveInDs(ds, req){
-  var error;
+function incrementDataInDs(ds, req){
   var count = 0;
-  var dbData;
   var settings;
   return new Promise(function(resolve, reject){
     var transaction = dsLIB.transaction();
@@ -131,7 +130,7 @@ function incrementLoveInDs(ds, req){
         return;
       }
 
-      readLoveFromDs(ds,transaction, req)
+      readDataFromDs(transaction, req)
         .then(function(data){
           if (typeof data !== 'undefined') {
             console.log('got count from datastore', data);
@@ -147,7 +146,7 @@ function incrementLoveInDs(ds, req){
           else reject(readError);
         })
         .then(function(){
-            updateLoveInDs(ds, req, count, settings)
+            updateDataInDs(ds, req, count, settings)
               .then(function(count){
                 resolve(count);
               })
@@ -160,7 +159,7 @@ function incrementLoveInDs(ds, req){
 }
 
 
-function updateLoveInDs (ds, req, count, settings) {
+function updateDataInDs (ds, req, count, settings) {
   var key = generateKey(req);
 
   var entity = {
@@ -179,12 +178,11 @@ function updateLoveInDs (ds, req, count, settings) {
     );
   });
 }
-function readLoveFromDs (ds, transaction,req) {
+function readDataFromDs (transaction,req) {
   return new Promise(function(resolve, reject) {
     var key = generateKey(req);
     transaction.get(key, function (err, entity) {
       if (err) {
-        //return callback(err);
         reject(err);
       }
       if (!entity) {
