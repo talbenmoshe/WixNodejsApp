@@ -52,7 +52,7 @@ var expect = require('chai').expect;
 
 //var express = require('express');
 var express = require('express');
-var controller = require('./thing.controller');
+var controller = require('./data.controller.js');
 
 var router = express.Router();
 describe('POST /api/things/', function () {

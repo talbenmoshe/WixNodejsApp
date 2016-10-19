@@ -27,7 +27,7 @@
       if (this.clicked) return;
       this.clicked = true;
 
-      this.$http.post('/api/things'+document.location.search)
+      this.$http.post('/api/data'+document.location.search)
         .then(response => {
           this.origLoveCount = response.data.loveCount;
           this.loveCount =  this.origLoveCount + this.loveStart ;
@@ -61,7 +61,7 @@
 
     $onInit() {
       let that = this;
-      this.$http.get('/api/things/read'+document.location.search)
+      this.$http.get('/api/data/read'+document.location.search)
         .then(response => {
           this.settings = response.data.settings;
           this.loveCount = this.origLoveCount = response.data.loveCount;

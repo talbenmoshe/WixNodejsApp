@@ -1,33 +1,12 @@
 'use strict';
 
-var config = require('./config/environment');
-var wix = require('./Wix');
-var path = require('path');
 
 
 
-
+var routingLogic = require('./routingLogic');
 module.exports = function (app) {
-  app.use(function(req,res,next){
-    try {
-     // if (!req.instance) return next();
-
-      var instance = wix.checkInstance(req.query.instance);
-      if (instance !== null) {
-        next();
-      }
-      else {
-        console.log('url: %s\nquery:%s',req.url,req.query);
-        res.send('unauthorized!');
-      }
-
-    }catch(e){
-      console.log('url: %s\nquery:%s',req.url,req.query);
-      res.send('unauthorized!');
-    }
-
-  });
-  app.use('/api/things', require('./api/thing'));
+  app.use(require('./Wix').middleware);
+  app.use('/api/data', require('./api/data'));
   // API
 
   app.route('/:url(api|app|bower_components|assets)/*')
@@ -35,18 +14,8 @@ module.exports = function (app) {
       res.status(404).end();
     });
 
-  app.get('/seo',function(req,res){
-    var mysplit= req.url.split('?');
-    mysplit= mysplit.length<2?'':mysplit[1];
-    res.render('seo',{myquery:mysplit});
-  });
-  app.get('/index',function(req,res){
-    console.log(config.env ,req.query.deviceType);
-    if ((config.env !== 'production') && (req.query.deviceType) &&  (req.query.deviceType == 'mobile') ){
-      res.render('mobile');
-    }
-    else res.render('index');
-  });
+  app.get('/seo',routingLogic.seoRoute);
+  app.get('/index',routingLogic.indexRoute);
   app.get('/settings',function(req,res){
     res.render('settings');
   });
@@ -54,13 +23,6 @@ module.exports = function (app) {
     res.render('mobile');
   });
 
-  app.get('/',function (req, res) {
-    console.log(config.env ,req.query.deviceType);
-      if ((config.env !== 'production') && (req.query.deviceType) &&  (req.query.deviceType == 'mobile') ){
-        res.render('mobile');
-      }
-      else res.render('index');
-
-    });
+  app.get('/',routingLogic.indexRoute);
 
 };

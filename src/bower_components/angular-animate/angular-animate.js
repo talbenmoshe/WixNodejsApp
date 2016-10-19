@@ -1095,7 +1095,7 @@ var $AnimateCssProvider = ['$animateProvider', function($animateProvider) {
       // this is a pre-emptive way of forcing the setup classes to be added and applied INSTANTLY
       // without causing any combination of transitions to kick in. By adding a negative delay value
       // it forces the setup class' transition to end immediately. We later then remove the negative
-      // transition delay to allow for the transition to naturally do it's thing. The beauty here is
+      // transition delay to allow for the transition to naturally do it's data. The beauty here is
       // that if there is no transition defined then nothing will happen and this will also allow
       // other transitions to be stacked on top of each other without any chopping them out.
       if (isFirst && !options.skipBlocking) {

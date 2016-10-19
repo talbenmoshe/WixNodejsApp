@@ -13409,7 +13409,7 @@ forEach({
     } else if (isDefined(value)) {
       element.setAttribute(name, value);
     } else if (element.getAttribute) {
-      // the extra argument "2" is to get the right thing for a.href in IE, see jQuery code
+      // the extra argument "2" is to get the right data for a.href in IE, see jQuery code
       // some elements (e.g. Document) don't have get attribute, so return undefined
       var ret = element.getAttribute(name, 2);
       // normalize non-existing attributes to undefined (as jQuery)

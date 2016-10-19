@@ -36,7 +36,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (this.clicked) return;
         this.clicked = true;
 
-        this.$http.post('/api/things' + document.location.search).then(function (response) {
+        this.$http.post('/api/data' + document.location.search).then(function (response) {
           _this.origLoveCount = response.data.loveCount;
           _this.loveCount = _this.origLoveCount + _this.loveStart;
           _this.$window.localStorage.setItem(_this.loveStartId, '1');
@@ -71,7 +71,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var _this3 = this;
 
         var that = this;
-        this.$http.get('/api/things/read' + document.location.search).then(function (response) {
+        this.$http.get('/api/data/read' + document.location.search).then(function (response) {
           _this3.settings = response.data.settings;
           _this3.loveCount = _this3.origLoveCount = response.data.loveCount;
           _this3.getNumber();

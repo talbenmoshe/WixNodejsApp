@@ -10,7 +10,7 @@ var dsLIB = require('../../ds');
 var ds = dsLIB.ds();
 
 function generateKey(req){
-  var metasiteId = getMetaSiteId(req);
+  var metasiteId = wix.getMetaSiteId(req);
   return dsLIB.setKey(['love', metasiteId]);
 }
 
@@ -116,11 +116,7 @@ module.exports = {
   }
 };
 
-function getMetaSiteId (req){
-  var instance = wix.checkInstance(req.query.instance);
-  var compId = req.query.origCompId || req.query.compId;
-  return (instance.instanceId+'_'+ compId) || 'demo';
-}
+
 
 function incrementLoveInDs(ds, req){
   var error;
