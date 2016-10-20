@@ -4,8 +4,6 @@
 
 'use strict';
 
-
-
 var config = require('./config/environment');
 var wix = require('wix');
 
@@ -31,11 +29,13 @@ var WixModel = (function() {
     getMetaSiteId: function (req){
       var instance = WixModel.checkInstance(req.query.instance);
       var compId = req.query.origCompId || req.query.compId;
+
       return (instance.instanceId+'_'+ compId) || 'demo';
     },
 
     checkIsOwner:function(req){
       var parsedInstance = WixModel.checkInstance(req.query.instance);
+
       if (parsedInstance === null) return false;
 
       if( parsedInstance.permissions !== null && parsedInstance.permissions=='OWNER') {
@@ -45,8 +45,6 @@ var WixModel = (function() {
     },
     middleware: function(req,res,next){
       try {
-        // if (!req.instance) return next();
-
         var instance = WixModel.checkInstance(req.query.instance);
         if (instance !== null) {
           next();
