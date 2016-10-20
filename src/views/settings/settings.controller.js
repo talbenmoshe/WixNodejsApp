@@ -15,11 +15,11 @@
       this.$scope = $scope;
       this.$window = $window;
       this.$timeout = $timeout;
-      this.loveStart = 0;
+      this.dataStart = 0;
 
       this.instanceId =  Wix.Utils.getInstanceId();
 
-      this.loveStartId = 'loveStart_'+this.instanceId;
+      this.dataStartId = 'dataStart_'+this.instanceId;
       this.settings     = {show: false};
       this.UIFuncs = null;
 
@@ -36,11 +36,11 @@
       let promise = defer.promise;
       let that = this;
 
-      Wix.Data.Public.get(this.loveStartId, { scope: 'APP' }, function(result){
+      Wix.Data.Public.get(this.dataStartId, { scope: 'APP' }, function(result){
 
         that.safeApply(function() {
-          that.loveStart = result[that.loveStartId];
-          that.$scope.refs.loveStart.setValue(that.loveStart);
+          that.dataStart = result[that.dataStartId];
+          that.$scope.refs.dataStart.setValue(that.dataStart);
 
           defer.resolve(true);
 
@@ -57,7 +57,7 @@
       this.$http.get('/api/data/settings'+document.location.search)
         .then(response => {
           this.settings = response.data.settings;
-          this.$scope.refs.showLove.state.checked = this.settings.show;
+          this.$scope.refs.showdata.state.checked = this.settings.show;
           defer.resolve(true);
         },response =>{
           console.log('fail get',response);
@@ -69,10 +69,10 @@
 
     setNumber(num){
       let that = this;
-      if (that.loveStart === num) return;
-      that.loveStart = num;
+      if (that.dataStart === num) return;
+      that.dataStart = num;
 
-      Wix.Data.Public.set(this.loveStartId, num, { scope: 'APP' },function(result){
+      Wix.Data.Public.set(this.dataStartId, num, { scope: 'APP' },function(result){
 
 
         that.updateComponent();
@@ -89,7 +89,7 @@
 
       Wix.Settings.triggerSettingsUpdatedEvent({
         settings: that.settings,
-        loveStart: that.loveStart
+        dataStart: that.dataStart
       },Wix.Utils.getOrigCompId());
     }
 

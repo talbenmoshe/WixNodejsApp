@@ -7,16 +7,16 @@
     constructor($http,$timeout,$window) {
       this.$http      = $http;
       this.settings   = {show:false};
-      this.loveCount  = 0;
+      this.DataCount  = 0;
       this.$window    = $window;
       this.$timeout   = $timeout;
 
       this.instanceId   =  Wix.Utils.getInstanceId();
 
-      this.loveStartId  = 'loveStart_'+this.instanceId;
-      this.loveStart    =  0;
+      this.dataStartId  = 'dataStart_'+this.instanceId;
+      this.dataStart    =  0;
       this.clicked      = false;
-      this.origLoveCount=0;
+      this.origDataCount=0;
 
     }
     safeApply(fn){
@@ -29,9 +29,9 @@
 
       this.$http.post('/api/data'+document.location.search)
         .then(response => {
-          this.origLoveCount = response.data.loveCount;
-          this.loveCount =  this.origLoveCount + this.loveStart ;
-          this.$window.localStorage.setItem(this.loveStartId,'1');
+          this.origDataCount = response.data.DataCount;
+          this.DataCount =  this.origDataCount + this.dataStart ;
+          this.$window.localStorage.setItem(this.dataStartId,'1');
 
         },response =>{
           this.clicked = false;
@@ -44,18 +44,21 @@
     getNumber (){
       let that = this;
       //console.log('in get number');
-      let isClicked = this.$window.localStorage.getItem(this.loveStartId);
+      let isClicked = this.$window.localStorage.getItem(this.dataStartId);
       if (isClicked==='1') this.clicked = true;
-      Wix.Data.Public.get(that.loveStartId, { scope: 'APP' }, function(result){
-        //console.log("success before",result,that.loveStart);
+      Wix.Data.Public.get(that.dataStartId, { scope: 'APP' }, function(result){
+        //console.log("success before",result,that.dataStart);
         that.safeApply(function() {
-          that.loveStart = result[that.loveStartId]*1;
-          that.loveCount += that.loveStart;
-          // console.log("success after", result, that.loveStart);
+          that.dataStart = result[that.dataStartId]*1;
+          that.DataCount += that.dataStart;
+          // console.log("success after", result, that.dataStart);
         });
       },((result)=>{
         console.log("fail",result);
-        Wix.Data.Public.set(this.loveStartId, 0, { scope: 'APP' }  );
+        if (Wix.Utils.getViewMode() === 'editor') {
+          Wix.Data.Public.set(this.dataStartId, 0, {scope: 'APP'});
+        }
+        
       }));
     }
 
@@ -64,16 +67,16 @@
       this.$http.get('/api/data/read'+document.location.search)
         .then(response => {
           this.settings = response.data.settings;
-          this.loveCount = this.origLoveCount = response.data.loveCount;
+          this.DataCount = this.origDataCount = response.data.DataCount;
           this.getNumber();
         });
 
       Wix.addEventListener(Wix.Events.SETTINGS_UPDATED,function(data){
         that.safeApply(function(){
-          console.log('Wix.Events.SETTINGS_UPDATED',data);//,that.loveStart,data.loveStart,that.loveCount);
+          console.log('Wix.Events.SETTINGS_UPDATED',data);//,that.dataStart,data.dataStart,that.DataCount);
           that.settings = data.settings;
-          that.loveStart = data.loveStart*1;
-          that.loveCount = that.origLoveCount + that.loveStart;
+          that.dataStart = data.dataStart*1;
+          that.DataCount = that.origDataCount + that.dataStart;
 
         });
       });

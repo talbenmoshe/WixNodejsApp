@@ -1,15 +1,14 @@
 'use strict';
 
-var express = require('express');
+var app = require('express')();
+require('./config/express')(app);
+require('./routes')(app);
+
 var chalk = require('chalk');
 var config = require('./config/environment');
 
-var app = express();
+
 var server = require('http').createServer(app);
-
-require('./config/express')(app);
-
-require('./routes')(app);
 
 server.listen(config.port, config.ip, function () {
 

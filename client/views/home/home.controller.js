@@ -11,16 +11,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.$http = $http;
       this.settings = { show: false };
-      this.loveCount = 0;
+      this.DataCount = 0;
       this.$window = $window;
       this.$timeout = $timeout;
 
       this.instanceId = Wix.Utils.getInstanceId();
 
-      this.loveStartId = 'loveStart_' + this.instanceId;
-      this.loveStart = 0;
+      this.dataStartId = 'dataStart_' + this.instanceId;
+      this.dataStart = 0;
       this.clicked = false;
-      this.origLoveCount = 0;
+      this.origDataCount = 0;
     }
 
     _createClass(MainController, [{
@@ -37,9 +37,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.clicked = true;
 
         this.$http.post('/api/data' + document.location.search).then(function (response) {
-          _this.origLoveCount = response.data.loveCount;
-          _this.loveCount = _this.origLoveCount + _this.loveStart;
-          _this.$window.localStorage.setItem(_this.loveStartId, '1');
+          _this.origDataCount = response.data.DataCount;
+          _this.DataCount = _this.origDataCount + _this.dataStart;
+          _this.$window.localStorage.setItem(_this.dataStartId, '1');
         }, function (response) {
           _this.clicked = false;
         });
@@ -51,18 +51,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var that = this;
         //console.log('in get number');
-        var isClicked = this.$window.localStorage.getItem(this.loveStartId);
+        var isClicked = this.$window.localStorage.getItem(this.dataStartId);
         if (isClicked === '1') this.clicked = true;
-        Wix.Data.Public.get(that.loveStartId, { scope: 'APP' }, function (result) {
-          //console.log("success before",result,that.loveStart);
+        Wix.Data.Public.get(that.dataStartId, { scope: 'APP' }, function (result) {
+          //console.log("success before",result,that.dataStart);
           that.safeApply(function () {
-            that.loveStart = result[that.loveStartId] * 1;
-            that.loveCount += that.loveStart;
-            // console.log("success after", result, that.loveStart);
+            that.dataStart = result[that.dataStartId] * 1;
+            that.DataCount += that.dataStart;
+            // console.log("success after", result, that.dataStart);
           });
         }, function (result) {
           console.log("fail", result);
-          Wix.Data.Public.set(_this2.loveStartId, 0, { scope: 'APP' });
+          if (Wix.Utils.getViewMode() === 'editor') {
+            Wix.Data.Public.set(_this2.dataStartId, 0, { scope: 'APP' });
+          }
         });
       }
     }, {
@@ -73,16 +75,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var that = this;
         this.$http.get('/api/data/read' + document.location.search).then(function (response) {
           _this3.settings = response.data.settings;
-          _this3.loveCount = _this3.origLoveCount = response.data.loveCount;
+          _this3.DataCount = _this3.origDataCount = response.data.DataCount;
           _this3.getNumber();
         });
 
         Wix.addEventListener(Wix.Events.SETTINGS_UPDATED, function (data) {
           that.safeApply(function () {
-            console.log('Wix.Events.SETTINGS_UPDATED', data); //,that.loveStart,data.loveStart,that.loveCount);
+            console.log('Wix.Events.SETTINGS_UPDATED', data); //,that.dataStart,data.dataStart,that.DataCount);
             that.settings = data.settings;
-            that.loveStart = data.loveStart * 1;
-            that.loveCount = that.origLoveCount + that.loveStart;
+            that.dataStart = data.dataStart * 1;
+            that.DataCount = that.origDataCount + that.dataStart;
           });
         });
       }

@@ -18,11 +18,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.$scope = $scope;
       this.$window = $window;
       this.$timeout = $timeout;
-      this.loveStart = 0;
+      this.dataStart = 0;
 
       this.instanceId = Wix.Utils.getInstanceId();
 
-      this.loveStartId = 'loveStart_' + this.instanceId;
+      this.dataStartId = 'dataStart_' + this.instanceId;
       this.settings = { show: false };
       this.UIFuncs = null;
 
@@ -41,11 +41,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var promise = defer.promise;
         var that = this;
 
-        Wix.Data.Public.get(this.loveStartId, { scope: 'APP' }, function (result) {
+        Wix.Data.Public.get(this.dataStartId, { scope: 'APP' }, function (result) {
 
           that.safeApply(function () {
-            that.loveStart = result[that.loveStartId];
-            that.$scope.refs.loveStart.setValue(that.loveStart);
+            that.dataStart = result[that.dataStartId];
+            that.$scope.refs.dataStart.setValue(that.dataStart);
 
             defer.resolve(true);
           });
@@ -65,7 +65,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         this.$http.get('/api/data/settings' + document.location.search).then(function (response) {
           _this.settings = response.data.settings;
-          _this.$scope.refs.showLove.state.checked = _this.settings.show;
+          _this.$scope.refs.showdata.state.checked = _this.settings.show;
           defer.resolve(true);
         }, function (response) {
           console.log('fail get', response);
@@ -78,10 +78,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'setNumber',
       value: function setNumber(num) {
         var that = this;
-        if (that.loveStart === num) return;
-        that.loveStart = num;
+        if (that.dataStart === num) return;
+        that.dataStart = num;
 
-        Wix.Data.Public.set(this.loveStartId, num, { scope: 'APP' }, function (result) {
+        Wix.Data.Public.set(this.dataStartId, num, { scope: 'APP' }, function (result) {
 
           that.updateComponent();
         }, function (result) {
@@ -96,7 +96,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         Wix.Settings.triggerSettingsUpdatedEvent({
           settings: that.settings,
-          loveStart: that.loveStart
+          dataStart: that.dataStart
         }, Wix.Utils.getOrigCompId());
       }
     }, {

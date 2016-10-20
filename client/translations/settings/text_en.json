@@ -1,5 +1,8 @@
 {
   "settings.tab.change":"Change tab",
   "main.tab.title": "Main",
-  "settings.tab.title": "Settings"
+  "settings.tab.title": "Settings",
+  "settings.show_counter": "Show Counter",
+  "settings.initial_value":"Initial value",
+  "settings.positive_only":"Positive numbers only"
 }

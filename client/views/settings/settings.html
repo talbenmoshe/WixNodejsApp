@@ -4,19 +4,19 @@
       <wix-control name="UI.button" props="{label: ('settings.tab.change'|translate), className: 'main-cta-btn',onClick: $ctrl.UIFuncs.btnClick}"></wix-control>
     </div>
     <div class="main-tab" tab="('main.tab.title'|translate)">
-      <wix-control name="UI.toggleSwitch" ref="showLove"  ng-bind1="$ctrl.settings.show" wix-param="showLove"
+      <wix-control name="UI.toggleSwitch" ref="showdata"  ng-bind1="$ctrl.settings.show" wix-param="showdata"
 
                    ng-attr-props="{
-                  label: 'Show counter',
+                  label: ('settings.show_counter'|translate),
                   defaultValue: $ctrl.settings.show,
                     onChange: $ctrl.UIFuncs.allowChange
                     }"></wix-control>
 
       <hr class="divider-long">
-      <wix-control name="UI.textInput" ng-bind1="$ctrl.loveStart" ref="loveStart" props="{
-                      title: 'Initial value',
+      <wix-control name="UI.textInput" ng-bind1="$ctrl.dataStart" ref="dataStart" props="{
+                      title: ('settings.initial_value'|translate),
                        validator: $ctrl.UIFuncs.inputChange,
-                       invalidMessage : 'Positive numbers only',
+                       invalidMessage : ('settings.positive_only'|translate),
                       defaultText:$ctrl.loveStart}">
       </wix-control>
     </div>
