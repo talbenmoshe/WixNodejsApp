@@ -21,26 +21,28 @@ function incrementDataInDs(ds, req){
         reject(transactionError);
         return;
       }
-
       dsLIB.readDataFromDs(transaction, req)
         .then(function(data){
           if (typeof data !== 'undefined') {
-            console.log('got count from datastore', data);
             count = data.count + 1;
             settings = data.settings;
             resolve(count);
           }
         })
         .catch(function(readError){
-          if (readError.code == 404){
+          if (readError.code === 404){
             settings=defaultSettings;
           }
           else reject(readError);
         })
         .then(function(){
-          updateDataInDs(ds, req, count, settings)
-            .then(function(count){
-              resolve(count);
+          var data = {
+            'count':count,
+            'settings':settings
+          };
+          dsLIB.updateDataInDs(ds, req, data)
+            .then(function(savedData){
+              resolve(savedData);
             })
             .catch(function(updateError){
               reject(updateError);
@@ -51,26 +53,6 @@ function incrementDataInDs(ds, req){
 }
 
 
-function updateDataInDs (ds, req, count, settings) {
-  var key = generateKey(req);
-
-  var entity = {
-    key: key,
-    data: {'count':count,
-      'settings':settings
-    }
-  };
-  return new Promise(function(resolve, reject) {
-    ds.save(
-      entity,
-      function (err) {
-        if (!err) resolve(entity.data);
-        else reject(err);
-      }
-    );
-  });
-}
-
 
 
 module.exports = {
@@ -80,7 +62,7 @@ module.exports = {
       .then(function(count) {
         //callbackRead
        // console.log('index post success',count);
-        res.json({DataCount: count})
+        res.json({data:{count: count}});
       })
     .catch(function (err) {
       console.log('index post fail',err);
@@ -93,14 +75,18 @@ module.exports = {
     dsLIB.readDataFromDs(transaction, req)
       .then(function (data) {
       //  console.log('then data',data);
-          res.json({DataCount: data.count, settings: data.settings, data: data, "first": false});
+          res.json({data, "first": false});
       })
       .catch(function(err){
       //  console.log('catch error',err)
         if (err.code === 404) {
-          updateDataInDs (ds, req, count, defaultSettings)
-          .then(function(data) {
-            res.json({DataCount: data.count, settings: data.settings, data: data, "first": true});
+          var data = {
+            'count':count,
+            'settings':defaultSettings
+          };
+          dsLIB.updateDataInDs (ds, req, data)
+          .then(function(savedData) {
+            res.json({savedData, "first": true});
           })
           .catch(function(updateError){
             res.status(500).send({status:updateError});
@@ -120,13 +106,14 @@ module.exports = {
           res.json({settings: data.settings});
       })
       .catch(function(err){
-        //  console.log('error got res count from datastore', error);
         if (err.code === 404) {
-          updateDataInDs (ds, req, count,  defaultSettings)
-            .then(function(data) {
-              //if (typeof data !== null) {
-                res.json({settings: data.settings});
-              //}
+          var data = {
+            'count':count,
+            'settings':defaultSettings
+          };
+          dsLIB.updateDataInDs (ds, req, data)
+            .then(function(savedData) {
+              res.json({settings: savedData.settings});
             })
             .catch(function(err){
               res.status(500).send({status:err});
@@ -146,10 +133,14 @@ module.exports = {
     var settings = {show:isShow};
 
     dsLIB.readDataFromDs(transaction, req)
-      .then(function (data) {
-          updateDataInDs(ds, req, data.count, settings)
-            .then(function (data) {
-              res.json({settings: data.settings});
+      .then(function (dbData) {
+        var data = {
+          'count':dbData.count,
+          'settings':settings
+        };
+        dsLIB.updateDataInDs(ds, req, data)
+            .then(function (savedData) {
+              res.json({settings: savedData.settings});
             })
             .catch(function(err){
               res.status(err.code).send({status: err})
@@ -157,11 +148,13 @@ module.exports = {
       })
       .catch(function(err) {
         if (err.code === 404) {
-          updateDataInDs(ds, req, count, settings)
-            .then(function (data) {
-              // if(typeof data !== null) {
-              res.json({settings: data.settings});
-              // }
+          var data = {
+            'count':count,
+            'settings':settings
+          };
+          dsLIB.updateDataInDs(ds, req, data)
+            .then(function (savedData) {
+              res.json({settings: savedData.settings});
             })
             .catch(function (err) {
               res.status(500).send({status: err});

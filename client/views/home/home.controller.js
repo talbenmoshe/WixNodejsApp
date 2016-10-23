@@ -37,7 +37,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.clicked = true;
 
         this.$http.post('/api/data' + document.location.search).then(function (response) {
-          _this.origDataCount = response.data.DataCount;
+          _this.origDataCount = response.data.data.count;
           _this.DataCount = _this.origDataCount + _this.dataStart;
           _this.$window.localStorage.setItem(_this.dataStartId, '1');
         }, function (response) {
@@ -74,14 +74,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var that = this;
         this.$http.get('/api/data/read' + document.location.search).then(function (response) {
-          _this3.settings = response.data.settings;
-          _this3.DataCount = _this3.origDataCount = response.data.DataCount;
+          _this3.settings = response.data.data.settings;
+          console.log(_this3.settings, response);
+          _this3.DataCount = _this3.origDataCount = response.data.data.count;
           _this3.getNumber();
         });
 
         Wix.addEventListener(Wix.Events.SETTINGS_UPDATED, function (data) {
           that.safeApply(function () {
-            console.log('Wix.Events.SETTINGS_UPDATED', data); //,that.dataStart,data.dataStart,that.DataCount);
+            //console.log('Wix.Events.SETTINGS_UPDATED',data);//,that.dataStart,data.dataStart,that.DataCount);
             that.settings = data.settings;
             that.dataStart = data.dataStart * 1;
             that.DataCount = that.origDataCount + that.dataStart;

@@ -29,7 +29,7 @@
 
       this.$http.post('/api/data'+document.location.search)
         .then(response => {
-          this.origDataCount = response.data.DataCount;
+          this.origDataCount = response.data.data.count;
           this.DataCount =  this.origDataCount + this.dataStart ;
           this.$window.localStorage.setItem(this.dataStartId,'1');
 
@@ -58,7 +58,7 @@
         if (Wix.Utils.getViewMode() === 'editor') {
           Wix.Data.Public.set(this.dataStartId, 0, {scope: 'APP'});
         }
-        
+
       }));
     }
 
@@ -66,14 +66,15 @@
       let that = this;
       this.$http.get('/api/data/read'+document.location.search)
         .then(response => {
-          this.settings = response.data.settings;
-          this.DataCount = this.origDataCount = response.data.DataCount;
+          this.settings = response.data.data.settings;
+          console.log(this.settings ,response);
+          this.DataCount = this.origDataCount = response.data.data.count;
           this.getNumber();
         });
 
       Wix.addEventListener(Wix.Events.SETTINGS_UPDATED,function(data){
         that.safeApply(function(){
-          console.log('Wix.Events.SETTINGS_UPDATED',data);//,that.dataStart,data.dataStart,that.DataCount);
+          //console.log('Wix.Events.SETTINGS_UPDATED',data);//,that.dataStart,data.dataStart,that.DataCount);
           that.settings = data.settings;
           that.dataStart = data.dataStart*1;
           that.DataCount = that.origDataCount + that.dataStart;

@@ -27,22 +27,38 @@ var dsLIB =  (function()  {
     transaction: function () {
       return ds.transaction();
     }
-    , readDataFromDs: function (transaction, req) {
-
-      return new Promise(function (resolve, reject) {
-        var key = generateKey(req);
-        transaction.get(key, function (err, entity) {
-          if (err) {
-            reject(err);
-          }
-          if (!entity) {
-            reject({
-              code: 404,
-              message: 'Not found'
-            });
-          }
-          else resolve(entity.data);
+    ,readDataFromDs: function (transaction, req) {
+        return new Promise(function (resolve, reject) {
+          var key = generateKey(req);
+          transaction.get(key, function (err, entity) {
+            if (err) {
+              //console.log('error got res from datastore', err);
+              reject(err);
+            }
+            if (!entity) {
+              reject({
+                code: 404,
+                message: 'Not found'
+              });
+            }
+            else resolve(entity.data);
+          });
         });
+    },
+    updateDataInDs: function (ds, req, data) {
+      var key = generateKey(req);
+      var entity = {
+        key: key,
+        data: data
+      };
+      return new Promise(function(resolve, reject) {
+        ds.save(
+          entity,
+          function (err) {
+            if (!err) resolve(entity.data);
+            else reject(err);
+          }
+        );
       });
     }
   }
