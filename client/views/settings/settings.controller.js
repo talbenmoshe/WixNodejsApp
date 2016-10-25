@@ -63,7 +63,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var defer = this.$q.defer();
         var promise = defer.promise;
 
-        this.$http.get('/api/data/settings' + document.location.search).then(function (response) {
+        this.$http.get('/api/settings' + document.location.search).then(function (response) {
           _this.settings = response.data.settings;
           _this.$scope.refs.showdata.state.checked = _this.settings.show;
           defer.resolve(true);
@@ -111,7 +111,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               that.settings.show = val;
               that.updateComponent();
             });
-            that.$http.post('/api/data/settings' + document.location.search, {
+            that.$http.post('/api/settings' + document.location.search, {
               show: val
             }).then(function (response) {
               //console.log('success', response);

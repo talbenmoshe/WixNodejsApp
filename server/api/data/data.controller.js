@@ -5,23 +5,23 @@
 
 'use strict';
 
-var dsLIB = require('../../ds');
+var dataStoreLibrary = require('../../datastore.js');
 
 var defaultSettings = { show: false };
-var ds = dsLIB.ds();
+var dataStore = dataStoreLibrary.dataStore();
 
 // COMMENT: this functions should be in the data store
 function incrementDataInDs(ds, req) {
   var count = 0;
   var settings;
   return new Promise(function (resolve, reject) {
-    var transaction = dsLIB.transaction();
+    var transaction = dataStoreLibrary.transaction();
     transaction.run(function (transactionError) {
       if (transactionError) {
         reject(transactionError);
         return;
       }
-      dsLIB.readDataFromDs(transaction, req)
+      dataStoreLibrary.readDataFromDs(transaction, req)
         .then(function (data) {
           if (typeof data !== 'undefined') {
             count = data.count + 1;
@@ -41,7 +41,7 @@ function incrementDataInDs(ds, req) {
             'settings': settings
           };
           // COMMENT: data store should not aware of the req object.. only relevant parameters should be passed to it.
-          dsLIB.updateDataInDs(ds, req, data)
+          dataStoreLibrary.updateDataInDs(ds, req, data)
             .then(function (savedData) {
               resolve(savedData);
             })
@@ -69,8 +69,9 @@ module.exports = {
   },
   read: function (req, res) {
     var count = 0;
-    var transaction = dsLIB.transaction();
-    dsLIB.readDataFromDs(transaction, req)
+    var transaction = dataStoreLibrary.transaction();
+
+    dataStoreLibrary.readDataFromDs(transaction, req)
       .then(function (data) {
         //  console.log('then data',data);
         res.json({ data, "first": false });
@@ -82,7 +83,7 @@ module.exports = {
             'count': count,
             'settings': defaultSettings
           };
-          dsLIB.updateDataInDs(ds, req, data)
+          dataStoreLibrary.updateDataInDs(ds, req, data)
             .then(function (savedData) {
               res.json({ savedData, "first": true });
             })
@@ -97,8 +98,8 @@ module.exports = {
   },
   readSettings: function (req, res) {
     var count = 0;
-    var transaction = dsLIB.transaction();
-    dsLIB.readDataFromDs(transaction, req)
+    var transaction = dataStoreLibrary.transaction();
+    dataStoreLibrary.readDataFromDs(transaction, req)
       .then(function (data) {
         //  console.log('got res count from datastore', data);
         res.json({ settings: data.settings });
@@ -109,7 +110,7 @@ module.exports = {
             'count': count,
             'settings': defaultSettings
           };
-          dsLIB.updateDataInDs(ds, req, data)
+          dataStoreLibrary.updateDataInDs(ds, req, data)
             .then(function (savedData) {
               res.json({ settings: savedData.settings });
             })
@@ -126,17 +127,17 @@ module.exports = {
   , writeSettings: function (req, res) {
     var count = 0;
 
-    var transaction = dsLIB.transaction();
+    var transaction = dataStoreLibrary.transaction();
     var isShow = req.body.show;
     var settings = { show: isShow };
 
-    dsLIB.readDataFromDs(transaction, req)
+    dataStoreLibrary.readDataFromDs(transaction, req)
       .then(function (dbData) {
         var data = {
           'count': dbData.count,
           'settings': settings
         };
-        dsLIB.updateDataInDs(ds, req, data)
+        dataStoreLibrary.updateDataInDs(ds, req, data)
           .then(function (savedData) {
             res.json({ settings: savedData.settings });
           })
@@ -150,7 +151,7 @@ module.exports = {
             'count': count,
             'settings': settings
           };
-          dsLIB.updateDataInDs(ds, req, data)
+          dataStoreLibrary.updateDataInDs(ds, req, data)
             .then(function (savedData) {
               res.json({ settings: savedData.settings });
             })

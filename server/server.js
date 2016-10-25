@@ -1,13 +1,12 @@
 'use strict';
 var express = require('express');
-var config = require('./config/environment');
+var config = require('./config/environment/index.js');
 var chalk = require('chalk');
 var compression = require('compression');
 var morgan = require('morgan');
 var path = require('path');
 var bodyParser = require('body-parser');
 var app = express();
-
 var env = config.env;
 
 
@@ -26,7 +25,7 @@ if (env === 'development' || env === 'test') {
   app.use(require('errorhandler')());
 }
 
-var routes = require('./routes')(app);
+var routes = require('./routes.js')(app);
 var server = require('http').createServer(app);
 
 server.listen(config.port, config.ip, function () {

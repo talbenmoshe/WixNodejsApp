@@ -27,7 +27,7 @@
       if (this.clicked) return;
       this.clicked = true;
 
-      this.$http.post('/api/data'+document.location.search)
+      this.$http.post('/api'+document.location.search)
         .then(response => {
           this.origDataCount = response.data.data.count;
           this.DataCount =  this.origDataCount + this.dataStart ;
@@ -64,7 +64,7 @@
 
     $onInit() {
       let that = this;
-      this.$http.get('/api/data/read'+document.location.search)
+      this.$http.get('/api/read'+document.location.search)
         .then(response => {
           this.settings = response.data.data.settings;
 

@@ -54,7 +54,7 @@
       let defer = this.$q.defer();
       let promise = defer.promise;
 
-      this.$http.get('/api/data/settings'+document.location.search)
+      this.$http.get('/api/settings'+document.location.search)
         .then(response => {
           this.settings = response.data.settings;
           this.$scope.refs.showdata.state.checked = this.settings.show;
@@ -103,7 +103,7 @@
             that.settings.show = val;
             that.updateComponent();
           });
-          that.$http.post('/api/data/settings' + document.location.search, {
+          that.$http.post('/api/settings' + document.location.search, {
             show: val
           })
             .then(response => {
