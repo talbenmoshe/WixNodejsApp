@@ -75,7 +75,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var that = this;
         this.$http.get('/api/data/read' + document.location.search).then(function (response) {
           _this3.settings = response.data.data.settings;
-          console.log(_this3.settings, response);
+
           _this3.DataCount = _this3.origDataCount = response.data.data.count;
           _this3.getNumber();
         });
