@@ -67,7 +67,7 @@
       this.$http.get('/api/data/read'+document.location.search)
         .then(response => {
           this.settings = response.data.data.settings;
-          console.log(this.settings ,response);
+
           this.DataCount = this.origDataCount = response.data.data.count;
           this.getNumber();
         });

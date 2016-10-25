@@ -1,5 +1,6 @@
 node_modules/
 client/bower_components/
+src/bower_components/
 client/styles/css
 .idea/
 dist/
