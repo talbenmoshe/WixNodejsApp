@@ -1,6 +1,5 @@
 module.exports =  {
-  getComponentUniqueId: function (parsedInstance,compId) {
-
-    return (parsedInstance.instanceId + '_' + compId) || 'demo';
+  getComponentUniqueId: function (keyParts) {
+    return (keyParts.join('_')) || 'demo';
   }
 };

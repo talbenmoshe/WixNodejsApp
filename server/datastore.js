@@ -7,32 +7,34 @@ var wix = require('./Wix.js');
 var dataStore = gcloud.datastore({
   projectId: process.env.GCLOUD_PROJECT || config.GCLOUD_PROJECT_ID
 });
-var key = null;
 
-function generateKey(wixInstance,widgetCompId) {
-  var componentUniqueId = wix.getComponentUniqueId(wixInstance,widgetCompId);
+
+function generateKey(keyParts) {
+  var componentUniqueId = wix.getComponentUniqueId(keyParts);
   return dataStoreLibrary.setKey(['Data', componentUniqueId]);
 }
 
-// COMMENT: this object should have meanningful function names that serve the business logic of the application.
-// 'readDataFromDs' has no meanning for the application..
-// You should have names like 'incementLoveCounter' and not 'updateDataInDs' which is too generic for the application
+
+
 var dataStoreLibrary = {
   dataStore: function () {
     return dataStore;
   },
-  getKey: function () {
-    return key;
+
+  getRecordKey: function(req){
+    var keyParts = [req.wixInstance.instanceId, req.widgetCompId];
+    return generateKey(keyParts);
   },
+
   setKey: function (arrKeys) {
     return dataStore.key(arrKeys);
   },
   transaction: function () {
     return dataStore.transaction();
   },
-  readDataFromDs: function (transaction, req) {
+
+  readWidgetSettings: function (transaction, key) {
     return new Promise(function (resolve, reject) {
-      var key = generateKey(req.wixInstance,req.widgetCompId);
       transaction.get(key, function (err, entity) {
         if (err) {
           //console.log('error got res from datastore', err);
@@ -48,11 +50,8 @@ var dataStoreLibrary = {
       });
     });
   },
-  // COMMENT: the name of this function is meanningless.
-  // As a prive method its fine, but this method is used from the outside in other components..
-  // The problem with that is that you do not know what this function does until you read the caller's code
-  updateDataInDs: function (dataStore, req, data) {
-    var key = generateKey(req.wixInstance,req.widgetCompId);
+
+  updateWidgetSettings: function ( key, data) {
     var entity = {
       key: key,
       data: data
@@ -66,6 +65,49 @@ var dataStoreLibrary = {
         }
       );
     });
-}};
+  },
+
+  incrementCounter:function (defaultSettings, key) {
+    var count = 0;
+    var settings;
+    return new Promise(function (resolve, reject) {
+      var transaction = dataStoreLibrary.transaction();
+      transaction.run(function (transactionError) {
+        if (transactionError) {
+          reject(transactionError);
+          return;
+        }
+        dataStoreLibrary.readWidgetSettings(transaction, key)
+          .then(function (data) {
+            if (typeof data !== 'undefined') {
+              count = data.count + 1;
+              settings = data.settings;
+              resolve(count);
+            }
+          })
+          .catch(function (readError) {
+            if (readError.code === 404) {
+              settings = defaultSettings;
+            }
+            else reject(readError);
+          })
+          .then(function () {
+            var data = {
+              'count': count,
+              'settings': settings
+            };
+
+            dataStoreLibrary.updateWidgetSettings( key, data)
+              .then(function (savedData) {
+                resolve(savedData);
+              })
+              .catch(function (updateError) {
+                reject(updateError);
+              });
+          });
+      });
+    });
+  }
+};
 
 module.exports = dataStoreLibrary;
