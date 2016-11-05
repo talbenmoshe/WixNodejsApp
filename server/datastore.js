@@ -1,27 +1,25 @@
 var config = require('./config/environment/index.js');
 var gcloud = require('google-cloud');
-var wix = require('./Wix.js');
-
-
 
 var dataStore = gcloud.datastore({
   projectId: process.env.GCLOUD_PROJECT || config.GCLOUD_PROJECT_ID
 });
 
-
-function generateKey(keyParts) {
-  var componentUniqueId = wix.getComponentUniqueId(keyParts);
-  return dataStoreLibrary.setKey(['Data', componentUniqueId]);
+function getComponentUniqueId(keyParts) {
+  return (keyParts.join('_')) || 'demo';
 }
 
-
+function generateKey(keyParts) {
+  var componentUniqueId = getComponentUniqueId(keyParts);
+  return dataStoreLibrary.setKey(['Data', componentUniqueId]);
+}
 
 var dataStoreLibrary = {
   dataStore: function () {
     return dataStore;
   },
 
-  getRecordKey: function(req){
+  getRecordKey: function (req) {
     var keyParts = [req.wixInstance.instanceId, req.widgetCompId];
     return generateKey(keyParts);
   },
@@ -51,7 +49,7 @@ var dataStoreLibrary = {
     });
   },
 
-  updateWidgetSettings: function ( key, data) {
+  updateWidgetSettings: function (key, data) {
     var entity = {
       key: key,
       data: data
@@ -67,7 +65,7 @@ var dataStoreLibrary = {
     });
   },
 
-  incrementCounter:function (defaultSettings, key) {
+  incrementCounter: function (defaultSettings, key) {
     var count = 0;
     var settings;
     return new Promise(function (resolve, reject) {
@@ -97,7 +95,7 @@ var dataStoreLibrary = {
               'settings': settings
             };
 
-            dataStoreLibrary.updateWidgetSettings( key, data)
+            dataStoreLibrary.updateWidgetSettings(key, data)
               .then(function (savedData) {
                 resolve(savedData);
               })

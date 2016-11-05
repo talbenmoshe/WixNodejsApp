@@ -8,8 +8,9 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var app = express();
 var env = config.env;
+var http = require('http');
 
-
+var setApplicationRoutes = require('./routes.js');
 
 app.engine('.ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -25,8 +26,8 @@ if (env === 'development' || env === 'test') {
   app.use(require('errorhandler')());
 }
 
-var routes = require('./routes.js')(app);
-var server = require('http').createServer(app);
+setApplicationRoutes(app);
+var server = http.createServer(app);
 
 server.listen(config.port, config.ip, function () {
   console.log(
