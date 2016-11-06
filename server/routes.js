@@ -1,27 +1,25 @@
 'use strict';
 
-var wixMiddleware = require('./wixMiddleware.js').middleware;
-var dataAPI = require('./api/data/index.js');
+var wixMiddleware = require('./wixMiddleware.js');
+var dataAPI = require('./api/data/data.controller');
+var indexRoute = require('./routers/indexRoute');
+var seoRoute = require('./routers/seoRoute');
 
-module.exports = function (app) {
-  app.use(wixMiddleware);
+module.exports = function(app) {
+    app.use(wixMiddleware);
+    app.use('/api', dataAPI);
+    app.route('/:url(api|app|bower_components|assets)/*')
+        .get(function(req, res) {
+            res.status(404).end();
+        });
 
-
-  app.use('/api', dataAPI);
-  // API
-
-  app.route('/:url(api|app|bower_components|assets)/*')
-    .get(function (req, res) {
-      res.status(404).end();
+    app.get('/seo', seoRoute);
+    app.get(['/', '/index'], indexRoute);
+    app.get('/settings', function(req, res) {
+        res.render('settings');
     });
-
-  app.get('/seo', require('./routers/seoRoute.js'));
-  app.get(['/', '/index'], require('./routers/indexRoute.js'));
-  app.get('/settings', function (req, res) {
-    res.render('settings');
-  });
-  app.get('/mobile', function (req, res) {
-    res.render('mobile');
-  });
+    app.get('/mobile', function(req, res) {
+        res.render('mobile');
+    });
 
 };
