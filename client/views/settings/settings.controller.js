@@ -75,6 +75,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return promise;
       }
     }, {
+      key: 'getDesign',
+      value: function getDesign() {
+        var _this2 = this;
+
+        var defer = this.$q.defer();
+        var promise = defer.promise;
+
+        this.$http.get('/design' + document.location.search).then(function (response) {
+
+          _this2.design = response.data.design;
+          console.log('design', _this2.design);
+          defer.resolve(true);
+        }, function (response) {
+          console.log('fail get', response);
+          defer.resolve(false);
+        });
+
+        return promise;
+      }
+    }, {
       key: 'setNumber',
       value: function setNumber(num) {
         var that = this;
@@ -147,7 +167,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: '$onInit',
       value: function $onInit() {
-        var _this2 = this;
+        var _this3 = this;
 
         this.UIFuncs = this.LibMethods();
         var that = this;
@@ -155,12 +175,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           //console.log("is %s number? %s",num,parseInt(num,10)==num*1);
           var result = parseInt(num, 10) == num * 1 && num * 1 >= 0;
           if (result) {
-            _this2.setNumber(num);
+            _this3.setNumber(num);
           }
           return result;
         };
 
-        that.$q.all([that.getNumber(), that.getSettings()]).then(function () {
+        that.$q.all([that.getDesign(), that.getNumber(), that.getSettings()]).then(function () {
           return;
           //console.log('getting script');
 

@@ -67,6 +67,25 @@
       return promise;
     }
 
+
+    getDesign(){
+      let defer = this.$q.defer();
+      let promise = defer.promise;
+
+      this.$http.get('/design'+document.location.search)
+        .then(response => {
+
+          this.design = response.data.design;
+          console.log('design',this.design);
+          defer.resolve(true);
+        },response =>{
+          console.log('fail get',response);
+          defer.resolve(false);
+        });
+
+      return promise;
+    }
+
     setNumber(num){
       let that = this;
       if (that.dataStart === num) return;
@@ -156,6 +175,7 @@
 
 
       that.$q.all([
+        that.getDesign(),
         that.getNumber(),
         that.getSettings()
       ])

@@ -23,5 +23,5 @@ module.exports = function (app) {
   app.get('/mobile', function (req, res) {
     res.render('mobile');
   });
-
+  app.get('/design',require('./routers/designRoute.js'));
 };

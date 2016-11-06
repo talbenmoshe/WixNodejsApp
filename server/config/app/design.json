@@ -1,0 +1,114 @@
+{
+  "design": {
+    "box": {
+      "color": {
+        "name": "boxBgColor",
+        "type": "ColorPickerSlider",
+        "value": "color-1",
+        "opacity": "100"
+      }
+    },
+    "border": {
+      "color": {
+        "name": "borderColor",
+        "type": "ColorPickerInput",
+        "value": "color-2"
+      },
+      "width": {
+        "name": "borderWidth",
+        "type": "Slider",
+        "value": "1"
+      }
+    },
+    "seperators": {
+      "color": {
+        "name": "seperatorsColor",
+        "type": "ColorPickerInput",
+        "value": "color-2"
+      },
+      "width": {
+        "name": "seperatorsWidth",
+        "type": "Slider",
+        "value": "1"
+      }
+    },
+    "title": {
+      "color": {
+        "name": "titleColor",
+        "type": "ColorPickerInput",
+        "value": "color-4"
+      },
+      "font": {
+        "name": "titleFont",
+        "type": "FontPicker",
+        "value": "Body-L",
+        "theme": "font_7"
+      }
+    },
+    "reviewsNumber": {
+      "color": {
+        "name": "reviewsNumberColor",
+        "type": "ColorPickerInput",
+        "value": "color-5"
+      },
+      "font": {
+        "name": "reviewsNumberFont",
+        "type": "FontPicker",
+        "value": "Body-M",
+        "theme": "font_8"
+      }
+    },
+    "username": {
+      "color": {
+        "name": "usernameColor",
+        "type": "ColorPickerInput",
+        "value": "color-5"
+      },
+      "font": {
+        "name": "usernameFont",
+        "type": "FontPicker",
+        "value": "Body-M",
+        "theme": "font_8"
+      }
+    },
+    "date": {
+      "color": {
+        "name": "dateColor",
+        "type": "ColorPickerInput",
+        "value": "color-3"
+      },
+      "font": {
+        "name": "dateFont",
+        "type": "FontPicker",
+        "value": "Body-M",
+        "theme": "font_8"
+      }
+    },
+    "review": {
+      "color": {
+        "name": "reviewColor",
+        "type": "ColorPickerInput",
+        "value": "color-5"
+      },
+      "font": {
+        "name": "reviewFont",
+        "type": "FontPicker",
+        "value": "Body-M",
+        "theme": "font_8"
+      }
+    },
+    "links": {
+      "color": {
+        "name": "linksColor",
+        "type": "ColorPickerInput",
+        "value": "color-8"
+      },
+      "font": {
+        "name": "linksFont",
+        "type": "FontPicker",
+        "value": "Body-M",
+        "theme": "font_8"
+      }
+    }
+  }
+}
