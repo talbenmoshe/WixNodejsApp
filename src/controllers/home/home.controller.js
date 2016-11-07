@@ -51,7 +51,6 @@
         that.safeApply(function() {
           that.dataStart = result[that.dataStartId]*1;
           that.DataCount += that.dataStart;
-          // console.log("success after", result, that.dataStart);
         });
       },((result)=>{
         console.log("fail",result);

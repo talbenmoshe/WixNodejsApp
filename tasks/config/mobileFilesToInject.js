@@ -1,4 +1,7 @@
 /**
+ * Created by admin on 07/11/2016.
+ */
+/**
  * Files injected into index.html by gulp-inject
  * used by tasks inject & watch
  */
@@ -8,6 +11,8 @@ module.exports = [
   srcFolder+'/views/home/directives/*.js', '!'+srcFolder+'/views/home/directives/**/*.spec.js',
   srcFolder+'/filters/**/*.js', '!'+srcFolder+'/filters/**/*.spec.js',
   srcFolder+'/services/**/*.js', '!'+srcFolder+'/services/**/*.spec.js',
+  srcFolder+'/controllers/mobile/*.js',
   srcFolder+'/controllers/home/*.js',
+
   srcFolder+'/views/home/**/*.js', '!'+srcFolder+'/views/**/*.spec.js', '!'+srcFolder+'/views/**/*.e2e.js'
 ];

@@ -15,5 +15,5 @@ angular.module('myApp', ['ngRoute', 'ngAnimate', 'WixControls', 'pascalprecht.tr
     prefix: "translations/settings/text_",
     suffix: ".json"
   }).preferredLanguage(locale).fallbackLanguage('en') // if translation file not exist then load English by default
-    .useSanitizeValueStrategy(null); //http://angular-translate.github.io/docs/#/guide/19_security;
+  .useSanitizeValueStrategy(null); //http://angular-translate.github.io/docs/#/guide/19_security;
 });

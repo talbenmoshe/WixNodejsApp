@@ -12,6 +12,7 @@ var runSequence          = require('run-sequence');
 var sq                   = require('streamqueue');
 
 var toInject   = require('./config/indexFilesToInject');
+var mobileFilesToInject = require('./config/mobileFilesToInject');
 var settingsToInject = require('./config/settingsFilesToInject');
 var toExclude  = require('./config/bowerFilesToExclude');
 
@@ -45,7 +46,8 @@ gulp.task('inject:index', function (done) {
 });
 
 gulp.task('inject:mobile', function (done) {
-  return  doInject('src/mobile.ejs',toInject,['client/views/home/styles/*.css','client/views/mobile/styles/*.css']);
+
+  return  doInject('src/mobile.ejs',mobileFilesToInject,['client/views/home/styles/*.css','client/views/mobile/styles/*.css']);
 });
 
 gulp.task('inject:settings', function(done){

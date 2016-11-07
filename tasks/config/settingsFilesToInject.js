@@ -9,5 +9,6 @@ module.exports = [
   srcFolder+'/views/settings/directives/*.js', '!'+srcFolder+'/views/settings/directives/**/*.spec.js',
   srcFolder+'/filters/**/*.js', '!'+srcFolder+'/filters/**/*.spec.js',
   srcFolder+'/services/**/*.js', '!'+srcFolder+'/services/**/*.spec.js',
+  srcFolder+'/controllers/settings/*.js',
   '!'+srcFolder+'/views/**/*.spec.js', '!'+srcFolder+'/views/**/*.e2e.js'
 ];

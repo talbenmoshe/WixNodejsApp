@@ -22,17 +22,9 @@ var babel = require('gulp-babel');
 var srcFolder = 'src';//was 'client'
 
 var jsFiles = [
-
-  srcFolder+'/views/**/*.js',
-  '!'+srcFolder+'/views/**/*.spec.js',
-  '!'+srcFolder+'/views/**/*.e2e.js',
-  srcFolder+'/views/*/directives/*.js',
-  '!'+srcFolder+'/views/**/directives/*.spec.js',
-  srcFolder+'/services/**/*.js',
-  '!'+srcFolder+'/services/**/*.spec.js',
-  srcFolder+'/animations/*.js',
-  srcFolder+'/filters/**/*.js',
-  '!'+srcFolder+'/filters/**/*.spec.js'
+  srcFolder+'/**/*.js',
+  '!'+srcFolder+'/**/*.spec.js',
+  '!'+srcFolder+'/**/*.e2e.js'
 ];
 var pureCopy = [
   srcFolder+'/assets/**/*',
@@ -43,21 +35,13 @@ var pureCopy = [
 
 var coreFiles = [
   srcFolder+'/assets/**/*',
-  srcFolder+'/translations/**/*.json',
-  srcFolder+'/views/**/*.html',
-  srcFolder+'/views/**/*.js',
-  srcFolder+'/views/**/*.css',
-  '!'+srcFolder+'/views/**/*.scss',
-  '!'+srcFolder+'/views/**/*.spec.js',
-  '!'+srcFolder+'/views/**/*.e2e.js',
-  srcFolder+'/views/*/directives/*.html',
-  srcFolder+'/views/*/directives/*.js',
-  '!'+srcFolder+'/views/**/directives/*.spec.js',
-  srcFolder+'/services/**/*.js',
-  '!'+srcFolder+'/services/**/*.spec.js',
-  srcFolder+'/animations/*.js',
-  srcFolder+'/filters/**/*.js',
-  '!'+srcFolder+'/filters/**/*.spec.js'
+  srcFolder+'/**/*.json',
+  srcFolder+'/**/*.html',
+  srcFolder+'/**/*.js',
+  srcFolder+'/**/*.css',
+  '!'+srcFolder+'/**/*.scss',
+  '!'+srcFolder+'/**/*.e2e.js',
+  '!'+srcFolder+'/**/*.spec.js'
 ];
 
  function babelize() {
@@ -66,7 +50,7 @@ var coreFiles = [
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(gulp.dest('client/views'));
+    .pipe(gulp.dest('client'));
 };
 
 
