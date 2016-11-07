@@ -6,11 +6,16 @@ var compression = require('compression');
 var morgan = require('morgan');
 var path = require('path');
 var bodyParser = require('body-parser');
+var constants = require('./config/app/constants.js');
+
 var app = express();
+
 var env = config.env;
 var http = require('http');
 
 var setApplicationRoutes = require('./routes.js');
+
+app.locals.constants = constants.asJSON();
 
 app.engine('.ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -21,6 +26,7 @@ app.use(compression());
 app.use(express.static(path.join(config.root, 'client')));
 app.set('appPath', 'client');
 app.set('views', 'client');
+
 
 if (env === 'development' || env === 'test') {
   app.use(require('errorhandler')());
