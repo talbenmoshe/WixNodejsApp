@@ -5,11 +5,20 @@ const constants = {
   DEFAULT_LANGUAGE:'en'
 };
 
+const appConstants  = {
+  LAYOUT_ROUND:'round',
+  LAYOUT_SQUARE:'square'
+
+};
+
+
 module.exports = {
   asJSON: function (){
     return constants;
+  },
+  appConstantsAsJSON: function(){
+    return appConstants;
   }
-
 };
 
 

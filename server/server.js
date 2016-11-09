@@ -16,6 +16,7 @@ var http = require('http');
 var setApplicationRoutes = require('./routes.js');
 
 app.locals.constants = constants.asJSON();
+app.locals.appConstants = constants.appConstantsAsJSON();
 
 app.engine('.ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
